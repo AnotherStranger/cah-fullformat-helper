@@ -10,12 +10,12 @@ BlackCard::BlackCard(QString text, QString category, int cardCount, QObject *par
     setCardCount(cardCount);
 }
 
-int BlackCard::getCardCount() const
+uint BlackCard::getCardCount() const
 {
     return cardCount;
 }
 
-void BlackCard::setCardCount(int value)
+void BlackCard::setCardCount(uint value)
 {
     cardCount = value;
 }
