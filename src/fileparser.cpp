@@ -29,15 +29,17 @@ QList<QSharedPointer<Card>> FileParser::readCsv(QString filename){
         if(pos != -1){
             QStringList entry = regexCsv.capturedTexts();
 
-            QString category(entry.at(3));
-            QString text(entry.at(5));
-
             QSharedPointer<Card> add;
             if(entry.at(1) == "W"){
+                QString category(entry.at(3));
+                QString text(entry.at(5));
                 add = QSharedPointer<Card>(new WhiteCard(text, category));
             }else{
+                QString countString =entry.at(3);
+                QString category(entry.at(5));
+                QString text(entry.at(7));
+
                 int count =1;
-                QString countString =entry.at(7);
                 if(countString.length() > 0){
                     count = countString.toInt();
                 }

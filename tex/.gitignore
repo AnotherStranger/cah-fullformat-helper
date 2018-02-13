@@ -1,0 +1,6 @@
+*
+!*.tex
+!*.txt
+!.gitignore
+!categories/
+!Makefile

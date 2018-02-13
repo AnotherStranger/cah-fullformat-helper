@@ -39,7 +39,7 @@ void BlackCard::fromLatex(QString latex){
 
 QString BlackCard::toCsv(){
     QString csv ="S;<category>;<text>;<count>";
-    return csv.replace("<category>", getCategory()).replace("<text>", getText()).replace("<count>", QString(getCardCount()));
+    return csv.replace("<category>", getCategory()).replace("<text>", getText()).replace("<count>", QString::number(getCardCount()));
 }
 
 }

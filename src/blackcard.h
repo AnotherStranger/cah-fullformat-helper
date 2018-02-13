@@ -45,7 +45,7 @@ public:
     /*!
      * \brief regexLatex regex-string which matches a valid LaTeX-representation of this card.
      */
-    static constexpr const char* regexLatex= "(.*\\\\blackcard\\{)([0-9]+)(\\}\\{)(.*)(\\}\\{)(.*)(\\}.*)";
+    static constexpr const char* regexLatex= "(.*\\\\blackcard\\{)(.*[0-9]+.*)(\\}\\{)(.*)(\\}\\{)(.*)(\\}.*)";
 
 private:
     uint cardCount;
