@@ -1,46 +1,45 @@
 #ifndef MAINCLASS_H
 #define MAINCLASS_H
-#include <QObject>
-#include <QCoreApplication>
 #include <QCommandLineParser>
-#include "fileparser.h"
+#include <QCoreApplication>
+#include <QObject>
 #include "cardsdeck.h"
+#include "fileparser.h"
 
-class MainClass : public QObject
-{
-    Q_OBJECT
-private:
-    QCoreApplication *app;
-    QCommandLineParser cmdParser;
+class MainClass : public QObject {
+  Q_OBJECT
+ private:
+  QCoreApplication *app;
+  QCommandLineParser cmdParser;
 
-    cah::FileParser fileParser;
-    cah::CardsDeck deck;
+  cah::FileParser fileParser;
+  cah::CardsDeck deck;
 
-    void setupCmdParser();
+  void setupCmdParser();
 
-public:
-    explicit MainClass(QObject *parent = 0);
-    /////////////////////////////////////////////////////////////
-    /// Call this to quit application
-    /////////////////////////////////////////////////////////////
-    void quit();
+ public:
+  explicit MainClass(QObject *parent = 0);
+  /////////////////////////////////////////////////////////////
+  /// Call this to quit application
+  /////////////////////////////////////////////////////////////
+  void quit();
 
-signals:
-    /////////////////////////////////////////////////////////////
-    /// Signal to finish, this is connected to Application Quit
-    /////////////////////////////////////////////////////////////
-    void finished();
+ signals:
+  /////////////////////////////////////////////////////////////
+  /// Signal to finish, this is connected to Application Quit
+  /////////////////////////////////////////////////////////////
+  void finished();
 
-public slots:
-    /////////////////////////////////////////////////////////////
-    /// This is the slot that gets called from main to start everything
-    /// but, everthing is set up in the Constructor
-    /////////////////////////////////////////////////////////////
-    void run();
+ public slots:
+  /////////////////////////////////////////////////////////////
+  /// This is the slot that gets called from main to start everything
+  /// but, everthing is set up in the Constructor
+  /////////////////////////////////////////////////////////////
+  void run();
 
-    /////////////////////////////////////////////////////////////
-    /// slot that get signal when that application is about to quit
-    /////////////////////////////////////////////////////////////
-    void aboutToQuitApp();
+  /////////////////////////////////////////////////////////////
+  /// slot that get signal when that application is about to quit
+  /////////////////////////////////////////////////////////////
+  void aboutToQuitApp();
 };
-#endif // MAINCLASS_H
+#endif  // MAINCLASS_H

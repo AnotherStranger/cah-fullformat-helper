@@ -1,51 +1,51 @@
 #ifndef CSVPARSER_H
 #define CSVPARSER_H
 
-#include <QObject>
-#include <QList>
 #include <QFile>
+#include <QList>
+#include <QObject>
 #include <QRegExp>
 #include <QSharedPointer>
+#include "blackcard.h"
 #include "card.h"
 #include "whitecard.h"
-#include "blackcard.h"
 
 namespace cah {
 
 /*!
- * \brief The FileParser class is responsible for parsing various input formats such as LaTeX and CSV.
+ * \brief The FileParser class is responsible for parsing various input formats
+ * such as LaTeX and CSV.
  */
-class FileParser : public QObject
-{
-    Q_OBJECT
+class FileParser : public QObject {
+  Q_OBJECT
 
-private:
-    QRegExp regexCsv= QRegExp("([WS])(;)([0-9a-zA-Z_]+)(;)([^;]*)(;)([0-9]*)");
+ private:
+  QRegExp regexCsv = QRegExp("([WS])(;)([0-9a-zA-Z_]+)(;)([^;]*)(;)([0-9]*)");
 
-    QRegExp regexLatexWhite= QRegExp(WhiteCard::regexLatex);
-    QRegExp regexLatexBlack= QRegExp(BlackCard::regexLatex);
+  QRegExp regexLatexWhite = QRegExp(WhiteCard::regexLatex);
+  QRegExp regexLatexBlack = QRegExp(BlackCard::regexLatex);
 
-public:
-    explicit FileParser(QObject *parent = nullptr);
+ public:
+  explicit FileParser(QObject *parent = nullptr);
 
-    /*!
-     * \brief returns a list of all found cards in the given csv-file
-     * \param filename csv-file which contains cards.
-     * \return A list of cards against humanity
-     */
-    QList<QSharedPointer<Card>> readCsv(QString filename);
+  /*!
+   * \brief returns a list of all found cards in the given csv-file
+   * \param filename csv-file which contains cards.
+   * \return A list of cards against humanity
+   */
+  QList<QSharedPointer<Card>> readCsv(QString filename);
 
-    /*!
-     * \brief returns a list of all found cards in the given LaTeX-file
-     * \param filename LaTeX-file which contains cards.
-     * \return A list of cards against humanity
-     */
-    QList<QSharedPointer<Card>> readLatex(QString filename);
+  /*!
+   * \brief returns a list of all found cards in the given LaTeX-file
+   * \param filename LaTeX-file which contains cards.
+   * \return A list of cards against humanity
+   */
+  QList<QSharedPointer<Card>> readLatex(QString filename);
 
-signals:
+ signals:
 
-public slots:
+ public slots:
 };
 }
 
-#endif // CSVPARSER_H
+#endif  // CSVPARSER_H
