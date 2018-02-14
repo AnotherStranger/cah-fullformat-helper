@@ -1,0 +1,44 @@
+%
+% This file is part of Cards Against Humanity Fullformat German.
+%
+% Cards Against Humanity Fullformat German is free software:
+% you can redistribute it and/or modify it under the terms of the
+% GNU General Public License as published by the Free Software Foundation,
+% either version 3 of the License, or (at your option) any later version.
+%
+% Cards Against Humanity Fullformat German is distributed in the hope that it
+% will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with Cards Against Humanity Fullformat German.
+% If not, see <http://www.gnu.org/licenses/>.
+%
+%
+% Please note: All whitespace characters might break this document. Please
+% avoid placing whitespace character that are not intended inside these files.
+%
+\documentclass[a4paper,parskip]{scrartcl}
+\usepackage[a4paper,top=10mm,bottom=10mm,left=10mm,right=10mm]{geometry}
+\usepackage{tikz}
+\usepackage{arev}
+\usepackage[ngerman]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{etoolbox}
+
+\begin{document}
+
+\def\SymbReg{\textsuperscript{\textregistered}}
+\setlength{\parskip}{-1pt}
+\setlength{\lineskip}{0pt}
+
+\centering
+
+\include{commands}
+
+\include{cards}
+
+\makeCardLists
+
+\end{document}
