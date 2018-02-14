@@ -20,7 +20,7 @@ class FileParser : public QObject
     Q_OBJECT
 
 private:
-    QRegExp regexCsv= QRegExp("([WS])(;)([0-9a-zA-Z_]+)(;)(.+)(;)([0-9]*)");
+    QRegExp regexCsv= QRegExp("([WS])(;)([0-9a-zA-Z_]+)(;)([^;]*)(;)([0-9]*)");
 
     QRegExp regexLatexWhite= QRegExp(WhiteCard::regexLatex);
     QRegExp regexLatexBlack= QRegExp(BlackCard::regexLatex);

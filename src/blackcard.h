@@ -34,13 +34,13 @@ public:
      * \brief getCardCount
      * \return the number of white cards to answer to this card
      */
-    uint getCardCount() const;
+    int getCardCount() const;
 
     /*!
      * \brief sets the number of answer cards that have to be given to answer this card.
      * \param value number of cards to answer this card.
      */
-    void setCardCount(uint value);
+    void setCardCount(int value);
 
     /*!
      * \brief regexLatex regex-string which matches a valid LaTeX-representation of this card.
@@ -48,7 +48,7 @@ public:
     static constexpr const char* regexLatex= "(.*\\\\blackcard\\{)(.*[0-9]+.*)(\\}\\{)(.*)(\\}\\{)(.*)(\\}.*)";
 
 private:
-    uint cardCount;
+    int cardCount;
 };
 
 
