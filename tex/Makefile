@@ -1,6 +1,6 @@
 default: cah-fullformat-german.pdf
 
-cah-fullformat-german.pdf:cah-fullformat-german.tex commands.tex karten.tex
+cah-fullformat-german.pdf:cah-fullformat-german.tex commands.tex cards.tex
 	pdflatex $<
 
 clean:
