@@ -3,7 +3,6 @@
 
 MainClass::MainClass(QObject *parent) : QObject(parent) {
   app = QCoreApplication::instance();
-  setupCmdParser();
   cmdParser.process(*app);
 }
 
@@ -43,25 +42,6 @@ void MainClass::run() {
   }
 
   quit();
-}
-
-void MainClass::setupCmdParser() {
-  cmdParser.setApplicationDescription(
-      "An application to help you managing your own CAH-Game.");
-  cmdParser.addHelpOption();
-  cmdParser.addVersionOption();
-  cmdParser.addOptions(
-      {{{"c", "csv"},
-        "Output cards in CSV-Format. Default output format is LaTeX."},
-
-       {{"s", "sort"}, "Sort cards output"},
-
-       {{"d", "duplicates"},
-        "Prints possible Duplicated Cards in CSV. Each pair is seperated by an "
-        "empty line.",
-        "Tolerance in percent."}});
-  cmdParser.addPositionalArgument(
-      "files", "Files to read. Possible formats are .csv and .tex");
 }
 
 void MainClass::quit() { emit finished(); }

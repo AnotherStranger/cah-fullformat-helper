@@ -13,6 +13,17 @@ void CardsDeck::addCard(QSharedPointer<Card> card) {
   cards.append(card);
 }
 
+void CardsDeck::addCards(QList<QSharedPointer<Card>> cards) {
+  for (auto card : cards) {
+    addCard(card);
+  }
+}
+
+QList<QSharedPointer<Card>> CardsDeck::getCards() {
+  sortCards();
+  return cards;
+}
+
 bool CardsDeck::getSort() const { return sort; }
 
 void CardsDeck::setSort(bool value) { sort = value; }

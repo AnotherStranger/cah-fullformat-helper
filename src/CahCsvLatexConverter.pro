@@ -1,7 +1,11 @@
-QT -= gui
+QT       += core gui sql
 
-CONFIG += c++17 console
-CONFIG -= app_bundle
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+TARGET = CahCsvLatexConverter
+TEMPLATE = app
+
+CONFIG += console c++17
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which as been marked deprecated (the exact warnings
@@ -20,7 +24,11 @@ SOURCES += main.cpp \
     mainclass.cpp \
     cardsdeck.cpp \
     fileparser.cpp \
-    card.cpp
+    card.cpp \
+    mainwindow.cpp \
+    commandlineparser.cpp \
+    dbmanager.cpp \
+    filewriter.cpp
 
 HEADERS += \
     whitecard.h \
@@ -28,4 +36,11 @@ HEADERS += \
     mainclass.h \
     cardsdeck.h \
     fileparser.h \
-    card.h
+    card.h \
+    mainwindow.h \
+    commandlineparser.h \
+    dbmanager.h \
+    filewriter.h
+
+FORMS += \
+    mainwindow.ui

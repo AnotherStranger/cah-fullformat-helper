@@ -13,6 +13,7 @@ namespace cah {
  * question).
  */
 class BlackCard : public Card {
+  Q_OBJECT
  public:
   /*!
    * Creates a BlackCard with the given text, category and answer card count.

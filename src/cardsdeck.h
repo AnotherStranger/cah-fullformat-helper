@@ -68,6 +68,18 @@ class CardsDeck : public QObject {
   void addCard(QSharedPointer<Card> card);
 
   /*!
+   * \brief adds a list of new cards to the deck
+   * \param cards to add to the deck
+   */
+  void addCards(QList<QSharedPointer<Card>> cards);
+
+  /*!
+   * \brief get all cards in this deck
+   * \return all cards in the deck. The list is sorted if sorting is enabled.
+   */
+  QList<QSharedPointer<Card>> getCards();
+
+  /*!
    * \brief returns a list of possible duplicate card text
    * \param threshold a value betwenn 0 and 1 which indicates the maximum
    * distance

@@ -10,6 +10,7 @@ namespace cah {
  * humanity deck
  */
 class WhiteCard : public Card {
+  Q_OBJECT
  public:
   /*! Creates a BlackCard with the given text and category.*/
   WhiteCard(QString text, QString category, QObject *parent = nullptr);

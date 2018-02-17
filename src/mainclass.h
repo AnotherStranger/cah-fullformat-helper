@@ -4,18 +4,17 @@
 #include <QCoreApplication>
 #include <QObject>
 #include "cardsdeck.h"
+#include "commandlineparser.h"
 #include "fileparser.h"
 
 class MainClass : public QObject {
   Q_OBJECT
  private:
   QCoreApplication *app;
-  QCommandLineParser cmdParser;
+  CommandLineParser cmdParser;
 
   cah::FileParser fileParser;
   cah::CardsDeck deck;
-
-  void setupCmdParser();
 
  public:
   explicit MainClass(QObject *parent = 0);
