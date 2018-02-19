@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
 
   prepareCardsTableView();
   cardsTableView->show();
+  ui->statusbar->showMessage("ready");
 }
 
 void MainWindow::prepareCardsTableView() {
@@ -78,9 +79,14 @@ MainWindow::~MainWindow() {
   delete ui;
 }
 
-void MainWindow::on_actionSpeichern_triggered() { tableViewModel->submitAll(); }
+void MainWindow::on_actionSpeichern_triggered() {
+  ui->statusbar->showMessage("Saving changes...");
+  tableViewModel->submitAll();
+  ui->statusbar->showMessage("ready");
+}
 
 void MainWindow::on_actionExport_triggered() {
+  ui->statusbar->showMessage("Exporting database...");
   ensureConsistentState();
   auto cards = database->selectCards();
 
@@ -98,6 +104,7 @@ void MainWindow::on_actionExport_triggered() {
         this, "No valid filename given",
         "The given filename has no valid extension (*.csv or *.tex). Aborting.",
         QMessageBox::Ok);
+    ui->statusbar->showMessage("ready");
     return;
   }
 
@@ -127,9 +134,11 @@ void MainWindow::on_actionExport_triggered() {
                             QMessageBox::Ok);
       break;
   }
+  ui->statusbar->showMessage("ready");
 }
 
 void MainWindow::on_actionImport_triggered() {
+  ui->statusbar->showMessage("Importing cards...");
   // Ask whether unsaved changes shall be saved before inserting and reloading
   ensureConsistentState();
 
@@ -149,14 +158,17 @@ void MainWindow::on_actionImport_triggered() {
   }
 
   tableViewModel->select();
+  ui->statusbar->showMessage("ready");
 }
 
 void MainWindow::on_actionAdd_Card_triggered() { tableViewModel->insertRow(0); }
 
 void MainWindow::on_actionRemove_Card_s_triggered() {
+  ui->statusbar->showMessage("Removing selected cards...");
   auto selection = cardsTableView->selectionModel();
 
-  for (QModelIndex row : selection->selectedRows()) {
+  for (QModelIndex row : selection->selectedIndexes()) {
     tableViewModel->removeRow(row.row());
   }
+  ui->statusbar->showMessage("ready");
 }
