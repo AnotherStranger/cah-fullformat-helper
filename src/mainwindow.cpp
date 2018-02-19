@@ -13,9 +13,11 @@ MainWindow::MainWindow(QWidget *parent)
   ui->setupUi(this);
 
   // TODO: make sqliteDB-path a preference
-  QString path =
-      QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-  database = new cah::DbManager(path.append("cards.db"));
+  QDir path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
+  if (!path.exists()) {
+    path.mkdir(".");
+  }
+  database = new cah::DbManager(path.absolutePath().append("/cards.db"));
 
   prepareCardsTableView();
   cardsTableView->show();
@@ -147,4 +149,14 @@ void MainWindow::on_actionImport_triggered() {
   }
 
   tableViewModel->select();
+}
+
+void MainWindow::on_actionAdd_Card_triggered() { tableViewModel->insertRow(0); }
+
+void MainWindow::on_actionRemove_Card_s_triggered() {
+  auto selection = cardsTableView->selectionModel();
+
+  for (QModelIndex row : selection->selectedRows()) {
+    tableViewModel->removeRow(row.row());
+  }
 }

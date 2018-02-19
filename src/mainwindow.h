@@ -29,6 +29,10 @@ class MainWindow : public QMainWindow {
 
   void on_actionImport_triggered();
 
+  void on_actionAdd_Card_triggered();
+
+  void on_actionRemove_Card_s_triggered();
+
  private:
   Ui::MainWindow *ui;
   QSqlTableModel *tableViewModel;

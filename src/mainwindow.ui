@@ -31,16 +31,44 @@
    </property>
    <widget class="QMenu" name="menuCAH_Helper">
     <property name="title">
-     <string>Datei</string>
+     <string>File</string>
     </property>
     <addaction name="actionImport"/>
     <addaction name="actionExport"/>
     <addaction name="actionSpeichern"/>
    </widget>
+   <widget class="QMenu" name="menuEdit">
+    <property name="title">
+     <string>Edit</string>
+    </property>
+    <addaction name="actionAdd_Card"/>
+    <addaction name="actionRemove_Card_s"/>
+   </widget>
    <addaction name="menuCAH_Helper"/>
+   <addaction name="menuEdit"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionSpeichern"/>
+   <addaction name="actionImport"/>
+   <addaction name="actionExport"/>
+   <addaction name="actionAdd_Card"/>
+   <addaction name="actionRemove_Card_s"/>
+  </widget>
   <action name="actionImport">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/images/import.svg</normaloff>:/images/images/import.svg</iconset>
+   </property>
    <property name="text">
     <string>Import</string>
    </property>
@@ -49,6 +77,11 @@
    </property>
   </action>
   <action name="actionExport">
+   <property name="icon">
+    <iconset>
+     <normalon>:/images/images/export.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
     <string>Export</string>
    </property>
@@ -57,14 +90,46 @@
    </property>
   </action>
   <action name="actionSpeichern">
+   <property name="icon">
+    <iconset>
+     <normalon>:/images/images/save.svg</normalon>
+    </iconset>
+   </property>
    <property name="text">
-    <string>Speichern</string>
+    <string>Save</string>
    </property>
    <property name="shortcut">
     <string>Ctrl+S</string>
    </property>
   </action>
+  <action name="actionAdd_Card">
+   <property name="icon">
+    <iconset resource="resources.qrc">
+     <normaloff>:/images/images/add.svg</normaloff>:/images/images/add.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Add Card</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionRemove_Card_s">
+   <property name="icon">
+    <iconset>
+     <normalon>:/images/images/remove.svg</normalon>
+    </iconset>
+   </property>
+   <property name="text">
+    <string>Remove Card(s)</string>
+   </property>
+   <property name="shortcut">
+    <string>Del</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>
