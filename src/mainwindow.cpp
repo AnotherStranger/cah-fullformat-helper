@@ -43,6 +43,7 @@ void MainWindow::prepareCardsTableView() {
   cardsTableView = ui->tableView;
   cardsTableView->setModel(tableViewModel);
   cardsTableView->hideColumn(0);  // Hide ID
+  cardsTableView->setSortingEnabled(true);
 
   // Fit number of answers and Category to content
   cardsTableView->horizontalHeader()->setSectionResizeMode(
@@ -161,7 +162,21 @@ void MainWindow::on_actionImport_triggered() {
   ui->statusbar->showMessage("ready");
 }
 
-void MainWindow::on_actionAdd_Card_triggered() { tableViewModel->insertRow(0); }
+void MainWindow::on_actionAdd_Card_triggered() {
+  bool insertMore = false;
+  do {
+    NewCardForm newCardForm(database->selectCards(), this);
+
+    if (newCardForm.exec() == QDialog::Accepted) {
+      database->insertCard(newCardForm.getResult());
+      insertMore = true;
+    } else {
+      insertMore = false;
+    }
+
+  } while (insertMore);
+  tableViewModel->select();
+}
 
 void MainWindow::on_actionRemove_Card_s_triggered() {
   ui->statusbar->showMessage("Removing selected cards...");

@@ -7,6 +7,7 @@
 #include "dbmanager.h"
 #include "fileparser.h"
 #include "filewriter.h"
+#include "newcardform.h"
 
 namespace Ui {
 class MainWindow;
