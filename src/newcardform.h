@@ -16,9 +16,18 @@ class NewCardForm : public QDialog {
  public:
   explicit NewCardForm(QSharedPointer<cah::CardsDeck> deck,
                        QWidget *parent = 0);
+  explicit NewCardForm(long long id, int cardCount, QString cardText,
+                       QString cardCategory,
+                       QSharedPointer<cah::CardsDeck> deck,
+                       QWidget *parent = 0);
   ~NewCardForm();
 
   QSharedPointer<cah::Card> getResult();
+
+  void setId(long long id);
+  void setCardCount(int count);
+  void setCardText(const QString &cardText);
+  void setCardCategory(const QString &cardCategory);
 
  private slots:
   void cardTextChanged();
@@ -26,6 +35,7 @@ class NewCardForm : public QDialog {
  private:
   Ui::NewCardForm *ui;
   QSharedPointer<cah::CardsDeck> deck;
+  long long cardId = -1;
   QString oldText;
 };
 

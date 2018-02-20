@@ -16,7 +16,9 @@ class DbManager : public QObject {
  public:
   DbManager(const QString& path, QObject* parent = nullptr);
 
+  bool insertOrUpdateCard(QSharedPointer<Card> card);
   bool insertCard(QSharedPointer<Card> card);
+  bool updateCard(QSharedPointer<Card> card);
   QSharedPointer<CardsDeck> selectCards();
 
   QSqlDatabase getDatabase() const;

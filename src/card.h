@@ -28,6 +28,11 @@ class Card : public QObject {
    */
   QString category;
 
+  /*!
+   * \brief id in Database. -1 if it was not inserted yet.
+   */
+  long long id = -1;
+
  public:
   /*!
    * \brief creates an empty card without a category or a text.
@@ -89,6 +94,10 @@ class Card : public QObject {
    * \param latex the LaTeX representaion of the current card.
    */
   virtual void fromLatex(QString latex) = 0;
+
+  long long getId() const;
+
+  void setId(long long value);
 
  signals:
 

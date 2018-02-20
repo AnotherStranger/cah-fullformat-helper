@@ -18,14 +18,30 @@ DbManager::DbManager(const QString &path, QObject *parent) : QObject(parent) {
     qDebug() << "Database: connection ok";
   }
 
-  QSqlQuery createQuery;
+  QSqlQuery createQuery(database);
   createQuery.exec(
       "CREATE TABLE IF NOT EXISTS cards(id INTEGER PRIMARY KEY AUTOINCREMENT, "
       "answers INTEGER DEFAULT 0, category TEXT, cardtext TEXT UNIQUE)");
 }
 
+bool DbManager::insertOrUpdateCard(QSharedPointer<Card> card) {
+  bool ret = false;
+
+  if (card->getId() == -1) {
+    ret = insertCard(card);
+  } else {
+    ret = updateCard(card);
+  }
+
+  return ret;
+}
+
 bool DbManager::insertCard(QSharedPointer<Card> card) {
-  QSqlQuery insertCard;
+  if (card->getId() != -1) {
+    return false;
+  }
+
+  QSqlQuery insertCard(database);
   insertCard.prepare(
       "INSERT INTO cards(answers, category, cardtext) VALUES(:answers, "
       ":category, :cardtext)");
@@ -40,29 +56,66 @@ bool DbManager::insertCard(QSharedPointer<Card> card) {
     insertCard.bindValue(":answers", black->getCardCount());
   }
 
-  return insertCard.exec();
+  bool insertRet = insertCard.exec();
+
+  QSqlQuery getId(database);
+  bool idRet = getId.exec("select last_insert_rowid() from cards");
+
+  if (idRet) {
+    getId.next();
+    card->setId(getId.value(0).toLongLong());
+  }
+
+  return insertRet && idRet;
+}
+
+bool DbManager::updateCard(QSharedPointer<Card> card) {
+  if (card->getId() == -1) {
+    return false;
+  }
+
+  QSqlQuery updateCard(database);
+  updateCard.prepare(
+      "UPDATE cards SET answers=:answers, category=:category, "
+      "cardtext=:cardtext WHERE id=:id");
+
+  updateCard.bindValue(":category", card->getCategory());
+  updateCard.bindValue(":cardtext", card->getText());
+  updateCard.bindValue(":id", card->getId());
+
+  // If the card is a blackcard get answer count
+  if (qobject_cast<BlackCard *>(card)) {
+    QSharedPointer<BlackCard> black = qSharedPointerCast<BlackCard>(card);
+    updateCard.bindValue(":answers", black->getCardCount());
+  }
+
+  return updateCard.exec();
 }
 
 QSharedPointer<CardsDeck> DbManager::selectCards() {
   QSharedPointer<CardsDeck> cards = QSharedPointer<CardsDeck>(new CardsDeck());
-  QSqlQuery selectCards;
+  QSqlQuery selectCards(database);
 
   bool succeeded =
-      selectCards.exec("SELECT answers, category, cardtext FROM cards");
+      selectCards.exec("SELECT id, answers, category, cardtext FROM cards");
 
   if (succeeded) {
     while (selectCards.next()) {
-      int answers = selectCards.value(0).toInt();
-      QString cardText = selectCards.value(2).toString();
-      QString cardCategory = selectCards.value(1).toString();
+      int id = selectCards.value(0).toLongLong();
+      int answers = selectCards.value(1).toInt();
+      QString cardText = selectCards.value(3).toString();
+      QString cardCategory = selectCards.value(2).toString();
 
+      QSharedPointer<Card> add;
       if (answers > 0) {
-        cards->addCard(QSharedPointer<Card>(
-            new BlackCard(cardText, cardCategory, answers)));
+        add = QSharedPointer<Card>(
+            new BlackCard(cardText, cardCategory, answers));
       } else {
-        cards->addCard(
-            QSharedPointer<Card>(new WhiteCard(cardText, cardCategory)));
+        add = QSharedPointer<Card>(new WhiteCard(cardText, cardCategory));
       }
+      add->setId(id);
+
+      cards->addCard(add);
     }
   }
 

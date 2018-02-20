@@ -2,6 +2,16 @@
 
 namespace cah {
 
+long long Card::getId() const
+{
+    return id;
+}
+
+void Card::setId(long long value)
+{
+    id = value;
+}
+
 Card::Card(QObject *parent) : QObject(parent) {}
 
 Card::Card(QString text, QString category, QObject *parent) : QObject(parent) {
