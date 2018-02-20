@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QSqlTableModel>
 #include <QTableView>
+#include "carddatamappingwidget.h"
 #include "dbmanager.h"
 #include "fileparser.h"
 #include "filewriter.h"
@@ -38,6 +39,8 @@ class MainWindow : public QMainWindow {
   Ui::MainWindow *ui;
   QSqlTableModel *tableViewModel;
   QTableView *cardsTableView;
+
+  CardDataMappingWidget *mappingWidget;
 
   cah::DbManager *database;
   cah::FileParser fileParser;

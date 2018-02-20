@@ -89,16 +89,16 @@ QList<cardpair> CardsDeck::getPossibleDuplicates(double threshold) {
   return possibleDuplicates;
 }
 
-bool isPossibleDuplicate(QSharedPointer<Card> card, QSharedPointer<Card> other,
+bool isPossibleDuplicate(const QString &first, const QString &other,
                          double threshold) {
   // Save string length to keep code shorter.
-  int sizeCard = card->getText().size();
-  int sizeOther = other->getText().size();
+  int sizeFirst = first.size();
+  int sizeOther = other.size();
 
   // The minimal levenshtein distance is the length difference of both strings
-  int minLevenshtein = std::abs(sizeCard - sizeOther);
+  int minLevenshtein = std::abs(sizeFirst - sizeOther);
   // The maximal levensthein distance is the length of the longer string
-  int maxLevenshtein = std::max(sizeCard, sizeOther);
+  int maxLevenshtein = std::max(sizeFirst, sizeOther);
 
   // threshold of 1.0 means Everything is similay, 0 means nothing is
   int dupThreshold = maxLevenshtein * threshold;
@@ -107,12 +107,16 @@ bool isPossibleDuplicate(QSharedPointer<Card> card, QSharedPointer<Card> other,
   // Don't calculate the Levenshtein distance when the min is already greater
   // than the threshold.
   if (minLevenshtein <= dupThreshold) {
-    isDuplicate =
-        levenshtein_distance(card->getText().toStdString(),
-                             other->getText().toStdString()) <= dupThreshold;
+    isDuplicate = levenshtein_distance(first.toStdString(),
+                                       other.toStdString()) <= dupThreshold;
   }
 
   return isDuplicate;
+}
+
+bool isPossibleDuplicate(QSharedPointer<Card> card, QSharedPointer<Card> other,
+                         double threshold) {
+  return isPossibleDuplicate(card->getText(), other->getText(), threshold);
 }
 
 int levenshtein_distance(const std::string &s1, const std::string &s2) {

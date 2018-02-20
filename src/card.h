@@ -99,6 +99,13 @@ class Card : public QObject {
 
   void setId(long long value);
 
+  /*!
+   * \brief regexCsv regex-string which matches a valid CSV-representation
+   * of this card.
+   */
+  static constexpr const char *regexCsv =
+      "([WS])(;)([^;]+)(;)([^;]+)(;)([0-9]*)";
+
  signals:
 
  public slots:

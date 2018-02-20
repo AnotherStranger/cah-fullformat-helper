@@ -20,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent)
   database = new cah::DbManager(path.absolutePath().append("/cards.db"));
 
   prepareCardsTableView();
+  this->centralWidget()->layout()->addWidget(mappingWidget);
+
   cardsTableView->show();
   ui->statusbar->showMessage("ready");
 }
@@ -53,6 +55,9 @@ void MainWindow::prepareCardsTableView() {
   // Stretch text column to fit frame
   cardsTableView->horizontalHeader()->setSectionResizeMode(
       3, QHeaderView::Stretch);
+
+  mappingWidget = new CardDataMappingWidget(cardsTableView, tableViewModel,
+                                            this->centralWidget());
 }
 
 void MainWindow::ensureConsistentState() {
@@ -163,19 +168,8 @@ void MainWindow::on_actionImport_triggered() {
 }
 
 void MainWindow::on_actionAdd_Card_triggered() {
-  bool insertMore = false;
-  do {
-    NewCardForm newCardForm(database->selectCards(), this);
-
-    if (newCardForm.exec() == QDialog::Accepted) {
-      database->insertCard(newCardForm.getResult());
-      insertMore = true;
-    } else {
-      insertMore = false;
-    }
-
-  } while (insertMore);
-  tableViewModel->select();
+  tableViewModel->insertRow(0);
+  cardsTableView->selectRow(0);
 }
 
 void MainWindow::on_actionRemove_Card_s_triggered() {
@@ -183,7 +177,14 @@ void MainWindow::on_actionRemove_Card_s_triggered() {
   auto selection = cardsTableView->selectionModel();
 
   for (QModelIndex row : selection->selectedIndexes()) {
-    tableViewModel->removeRow(row.row());
+    QString vertiHeader =
+        tableViewModel->headerData(row.row(), Qt::Vertical, Qt::DisplayRole)
+            .toString();
+    if (vertiHeader.trimmed() != QString("*")) {
+      tableViewModel->removeRow(row.row());
+    } else {
+      tableViewModel->revertRow(row.row());
+    }
   }
   ui->statusbar->showMessage("ready");
 }

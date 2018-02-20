@@ -29,7 +29,7 @@ SOURCES += main.cpp \
     commandlineparser.cpp \
     dbmanager.cpp \
     filewriter.cpp \
-    newcardform.cpp
+    carddatamappingwidget.cpp
 
 HEADERS += \
     whitecard.h \
@@ -42,11 +42,11 @@ HEADERS += \
     commandlineparser.h \
     dbmanager.h \
     filewriter.h \
-    newcardform.h
+    carddatamappingwidget.h
 
 FORMS += \
     mainwindow.ui \
-    newcardform.ui
+    carddatamappingwidget.ui
 
 RESOURCES += \
     resources.qrc

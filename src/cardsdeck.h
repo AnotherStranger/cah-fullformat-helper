@@ -144,6 +144,20 @@ int levenshtein_distance(const std::string &s1, const std::string &s2);
  */
 bool isPossibleDuplicate(QSharedPointer<Card> card, QSharedPointer<Card> other,
                          double threshold);
+
+/*!
+ * \brief returns whether the two given strings are duplicates or not
+ * \param first first string to check
+ * \param other second string to check
+ * \param threshold a value between 0 and 1. A higher value means more strings
+ * will be seen as duplicates.
+ *        A value of 1 will mark all strings as duplicate. A value of 0 will
+ * mark
+ * any strings as duplicate.
+ * \return true when the given strings a possible duplicates, false otherwise
+ */
+bool isPossibleDuplicate(const QString &first, const QString &other,
+                         double threshold);
 }
 
 #endif  // CARDSDECK_H
