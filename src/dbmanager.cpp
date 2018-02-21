@@ -51,10 +51,12 @@ bool DbManager::insertCard(QSharedPointer<Card> card) {
   insertCard.bindValue(":cardtext", card->getText());
 
   // If the card is a blackcard get answer count
+  int cardCount = 0;
   if (qobject_cast<BlackCard *>(card)) {
     QSharedPointer<BlackCard> black = qSharedPointerCast<BlackCard>(card);
-    insertCard.bindValue(":answers", black->getCardCount());
+    cardCount = black->getCardCount();
   }
+  insertCard.bindValue(":answers", cardCount);
 
   bool insertRet = insertCard.exec();
 

@@ -8,7 +8,6 @@
 #include "dbmanager.h"
 #include "fileparser.h"
 #include "filewriter.h"
-#include "newcardform.h"
 
 namespace Ui {
 class MainWindow;
@@ -34,6 +33,8 @@ class MainWindow : public QMainWindow {
   void on_actionAdd_Card_triggered();
 
   void on_actionRemove_Card_s_triggered();
+
+  void on_tableView_doubleClicked(const QModelIndex &index);
 
  private:
   Ui::MainWindow *ui;

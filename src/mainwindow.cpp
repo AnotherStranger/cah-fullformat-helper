@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QSqlRecord>
 #include <QStandardPaths>
 #include "dbmanager.h"
 #include "fileparser.h"
@@ -46,6 +47,7 @@ void MainWindow::prepareCardsTableView() {
   cardsTableView->setModel(tableViewModel);
   cardsTableView->hideColumn(0);  // Hide ID
   cardsTableView->setSortingEnabled(true);
+  cardsTableView->setEditTriggers(QTableView::NoEditTriggers);
 
   // Fit number of answers and Category to content
   cardsTableView->horizontalHeader()->setSectionResizeMode(
@@ -168,23 +170,44 @@ void MainWindow::on_actionImport_triggered() {
 }
 
 void MainWindow::on_actionAdd_Card_triggered() {
-  tableViewModel->insertRow(0);
-  cardsTableView->selectRow(0);
+  if (!tableViewModel->isDirty()) {
+    QSqlRecord add = tableViewModel->record();
+
+    add.remove(add.indexOf("id"));
+    add.setValue(add.indexOf("answers"), 0);
+    add.setValue(add.indexOf("category"), "");
+    add.setValue(add.indexOf("cardtext"), "");
+
+    tableViewModel->insertRecord(0, add);
+    cardsTableView->selectRow(0);
+    mappingWidget->startEditing();
+  }
 }
 
 void MainWindow::on_actionRemove_Card_s_triggered() {
   ui->statusbar->showMessage("Removing selected cards...");
-  auto selection = cardsTableView->selectionModel();
 
-  for (QModelIndex row : selection->selectedIndexes()) {
-    QString vertiHeader =
-        tableViewModel->headerData(row.row(), Qt::Vertical, Qt::DisplayRole)
-            .toString();
-    if (vertiHeader.trimmed() != QString("*")) {
-      tableViewModel->removeRow(row.row());
-    } else {
-      tableViewModel->revertRow(row.row());
+  QModelIndexList indexes = cardsTableView->selectionModel()->selectedIndexes();
+  QList<int> rowsToDelete;
+
+  // Get all row indexes (only once)
+  for (auto index : indexes) {
+    if (!rowsToDelete.contains(index.row())) {
+      rowsToDelete.append(index.row());
     }
   }
+
+  // sort descending, so you can delete back to front.
+  auto sortFun = [](int i1, int i2) -> bool { return i1 > i2; };
+  std::sort(rowsToDelete.begin(), rowsToDelete.end(), sortFun);
+
+  for (int currentRow : rowsToDelete) {
+    tableViewModel->removeRow(currentRow);
+  }
+  tableViewModel->submitAll();
   ui->statusbar->showMessage("ready");
+}
+
+void MainWindow::on_tableView_doubleClicked(const QModelIndex &index) {
+  mappingWidget->startEditing();
 }
