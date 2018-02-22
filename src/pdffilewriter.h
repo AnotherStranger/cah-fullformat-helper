@@ -15,31 +15,26 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+#ifndef PDFFILEWRITER_H
+#define PDFFILEWRITER_H
 
-#ifndef MYSETTINGS_H
-#define MYSETTINGS_H
+#include <QObject>
+#include "ifilewriter.h"
+#include "mysettings.h"
 
-#include <QSettings>
-
-class MySettings : public QSettings {
+namespace cah {
+class PdfFileWriter : public IFileWriter {
+  Q_OBJECT
  public:
-  MySettings();
+  PdfFileWriter(QObject *parent = nullptr);
 
-  QString getDbPath();
-  void setDbPath(const QString& path);
-
-  int getDuplicateThreshold();
-  void setDuplicateThreshold(int value);
-
-  QString getLatexCommand();
-  void setLatexCommand(const QString& command);
+  virtual IoResult writeFile(const QString &targetFile,
+                             QSharedPointer<CardsDeck> deck) override;
 
  private:
-  static constexpr const char* KEY_DB_PATH = "data/dbpath";
-  static constexpr const char* KEY_DUPLICATE_THRESHOLD =
-      "gui/duplicatethreshold";
-  static constexpr const char* KEY_LATEX_COMMAND = "cmd/latex";
+  MySettings settings;
 };
+}
 
-#endif  // MYSETTINGS_H
+#endif  // PDFFILEWRITER_H

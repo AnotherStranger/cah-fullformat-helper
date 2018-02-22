@@ -26,7 +26,6 @@
 #include "carddatamappingwidget.h"
 #include "dbmanager.h"
 #include "fileparser.h"
-#include "filewriter.h"
 #include "mysettings.h"
 
 namespace Ui {
@@ -70,7 +69,6 @@ class MainWindow : public QMainWindow {
 
   cah::DbManager *database;
   cah::FileParser fileParser;
-  cah::FileWriter fileWriter;
 
   void prepareCardsTableView();
   void ensureConsistentState();

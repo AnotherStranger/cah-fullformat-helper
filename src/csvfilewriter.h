@@ -15,31 +15,23 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+#ifndef CSVFILEWRITER_H
+#define CSVFILEWRITER_H
 
-#ifndef MYSETTINGS_H
-#define MYSETTINGS_H
+#include <QObject>
+#include "ifilewriter.h"
 
-#include <QSettings>
+namespace cah {
 
-class MySettings : public QSettings {
+class CsvFileWriter : public IFileWriter {
+  Q_OBJECT
  public:
-  MySettings();
+  CsvFileWriter(QObject *parent = nullptr);
 
-  QString getDbPath();
-  void setDbPath(const QString& path);
-
-  int getDuplicateThreshold();
-  void setDuplicateThreshold(int value);
-
-  QString getLatexCommand();
-  void setLatexCommand(const QString& command);
-
- private:
-  static constexpr const char* KEY_DB_PATH = "data/dbpath";
-  static constexpr const char* KEY_DUPLICATE_THRESHOLD =
-      "gui/duplicatethreshold";
-  static constexpr const char* KEY_LATEX_COMMAND = "cmd/latex";
+  virtual IoResult writeFile(const QString &targetFile,
+                             QSharedPointer<CardsDeck> deck) override;
 };
+}
 
-#endif  // MYSETTINGS_H
+#endif  // CSVFILEWRITER_H

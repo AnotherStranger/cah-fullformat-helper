@@ -1,0 +1,261 @@
+%
+% This file is part of Cards Against Humanity Fullformat German.
+%
+% Cards Against Humanity Fullformat German is free software:
+% you can redistribute it and/or modify it under the terms of the
+% GNU General Public License as published by the Free Software Foundation,
+% either version 3 of the License, or (at your option) any later version.
+%
+% Cards Against Humanity Fullformat German is distributed in the hope that it
+% will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+% GNU General Public License for more details.
+%
+% You should have received a copy of the GNU General Public License
+% along with Cards Against Humanity Fullformat German.
+% If not, see <http://www.gnu.org/licenses/>.
+%
+%
+% Please note: All whitespace characters might break this document. Please
+% avoid placing whitespace character that are not intended inside these files.
+%
+\pgfmathsetmacro{\cardwidth}{6.2}
+\pgfmathsetmacro{\cardheight}{8.8}
+\pgfmathsetmacro{\stripwidth}{0.6}
+\pgfmathsetmacro{\strippadding}{0.1}
+\pgfmathsetmacro{\textpadding}{0.1}
+\pgfmathsetmacro{\ruleheight}{0.15}
+\pgfmathsetmacro{\cardsymbolwidth}{0.25}
+\pgfmathsetmacro{\cardsymbolheight}{0.4}
+\pgfmathsetmacro{\circlesize}{8}
+\pgfmathsetmacro{\paddingtop}{0.8}
+\pgfmathsetmacro{\titleheight}{1}
+\pgfmathsetmacro{\cardsymbolwidthbig}{1.5}
+\pgfmathsetmacro{\cardsymbolheightbig}{.95}
+
+\newcommand{\titleleft}{CARDS AGAINST HUMANITY}
+\newcommand{\titleback}{CARDS AGAINST HUMANITY}
+\newcommand{\underl}{\rule{2cm}{.5pt}\hspace{3pt}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\makeatletter
+\newcommand\modulo[2]{\@tempcnta=#1
+        \divide\@tempcnta by #2
+        \multiply\@tempcnta by #2
+        \multiply\@tempcnta by -1
+        \advance\@tempcnta by #1\relax
+        \the\@tempcnta}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcounter{CntTitle}
+\newcommand\titlecard[1]{%
+	\stepcounter{CntTitle}%
+	\csdef{title\theCntTitle}{#1}%
+}
+\newcommand\getTitle[1]{\csuse{title#1}}
+
+\newcounter{CntWhite}
+\newcommand\whitecard[2]{%
+	\stepcounter{CntWhite}%
+	\csdef{whiteTopic\theCntWhite}{#1}%
+	\csdef{whiteTitle\theCntWhite}{#2}%
+}
+\newcommand\getWhiteTopic[1]{\csuse{whiteTopic#1}}
+\newcommand\getWhiteTitle[1]{\csuse{whiteTitle#1}}
+
+\newcounter{CntBlack}
+\newcommand\blackcard[3]{%
+	\stepcounter{CntBlack}%
+	\csdef{blackCount\theCntBlack}{#1}%
+	\csdef{blackTopic\theCntBlack}{#2}%
+	\csdef{blackTitle\theCntBlack}{#3}%
+}
+\newcommand\getBlackCount[1]{\csuse{blackCount#1}}
+\newcommand\getBlackTopic[1]{\csuse{blackTopic#1}}
+\newcommand\getBlackTitle[1]{\csuse{blackTitle#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcounter{CntList}
+\newcommand\makeCardLists{%
+	% Title Cards %
+	\setcounter{CntList}{0}%
+	\whiledo {\value{CntList} < \value{CntTitle}}%
+		{%
+			\foreach \n in {0,...,8}%
+				{%
+					\ifnum\value{CntTitle}>\number\numexpr\value{CntList}+\n%
+						\drawTitlecard{\getTitle{\number\numexpr\value{CntList}+\n+1}}%
+					\fi%
+				}%
+			\newpage
+			\foreach \n in {2,...,0}%
+				{%
+					\ifnum\value{CntTitle}>\number\numexpr\value{CntList}+\n%
+						\drawTitlecard{\getTitle{\number\numexpr\value{CntList}+\n+1}}%
+					\fi%
+				}%
+			\foreach \n in {5,...,3}%
+				{%
+					\ifnum\value{CntTitle}>\number\numexpr\value{CntList}+\n%
+						\drawTitlecard{\getTitle{\number\numexpr\value{CntList}+\n+1}}%
+					\fi%
+				}%
+			\foreach \n in {8,...,6}%
+				{%
+					\ifnum\value{CntTitle}>\number\numexpr\value{CntList}+\n%
+						\drawTitlecard{\getTitle{\number\numexpr\value{CntList}+\n+1}}%
+					\fi%
+				}%
+			\newpage
+			\addtocounter{CntList}{9}%
+		}%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% White Cards %
+	\setcounter{CntList}{0}%
+	\whiledo {\value{CntList} < \value{CntWhite}}%
+		{%
+			\stepcounter{CntList}%
+			\drawWhitecard{\getWhiteTopic{\theCntList}}{\getWhiteTitle{\theCntList}}%
+			%
+			\ifnum\value{CntList}=\number\numexpr\value{CntList}/9*9\relax%
+				\newpage%
+				\drawWhitecardback\drawWhitecardback\drawWhitecardback%
+				\drawWhitecardback\drawWhitecardback\drawWhitecardback%
+				\drawWhitecardback\drawWhitecardback\drawWhitecardback%
+				\newpage%
+			\else%
+				\ifnum\value{CntList}=\value{CntWhite}%
+					\newpage%
+					\pgfmathtruncatemacro{\remainingCards}{\value{CntList}-div(\value{CntList},9)*9}
+					\foreach \n in {1,...,\remainingCards}%
+						{\drawWhitecardback}%
+					\newpage%
+				\fi%
+			\fi%
+		}%
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	% White Cards %
+	\setcounter{CntList}{0}%
+	\whiledo {\value{CntList} < \value{CntBlack}}%
+		{%
+			\stepcounter{CntList}%
+			\drawBlackcard{\getBlackCount{\theCntList}}{\getBlackTopic{\theCntList}}{\getBlackTitle{\theCntList}}%
+			%
+			\ifnum\value{CntList}=\number\numexpr\value{CntList}/9*9\relax%
+				\newpage%
+				\drawBlackcardback\drawBlackcardback\drawBlackcardback%
+				\drawBlackcardback\drawBlackcardback\drawBlackcardback%
+				\drawBlackcardback\drawBlackcardback\drawBlackcardback%
+				\newpage%
+			\else%
+				\ifnum\value{CntList}=\value{CntBlack}%
+					\newpage%
+					\pgfmathtruncatemacro{\remainingCards}{\value{CntList}-div(\value{CntList},9)*9}
+					\foreach \n in {1,...,\remainingCards}%
+						{\drawBlackcardback}%
+					\newpage%
+				\fi%
+			\fi%
+		}%
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\drawBlackcard}[3] {%
+	\begin{tikzpicture}%
+		\draw (0,0) rectangle (\cardwidth cm,\cardheight cm);
+		% Bar left
+		\fill[black] (0, 0) rectangle (\stripwidth,\cardheight) node[rotate=90,above left,white,font=\large] {\titleleft};
+		% Icon
+		\node[fill=black, draw=white, minimum height = \cardsymbolwidth cm, minimum width = \cardsymbolheight cm, anchor=east, rotate=15] at (4*\stripwidth/5, \stripwidth/2) { } ;
+		\node[fill=white, draw=black, minimum height = \cardsymbolwidth cm, minimum width = \cardsymbolheight cm, anchor=east, rotate=0] at (4*\stripwidth/5, \stripwidth/2) { } ;
+		\node[fill=white, draw=black, minimum height = \cardsymbolwidth cm, minimum width = \cardsymbolheight cm, anchor=east, rotate=-20] at (4*\stripwidth/5, \stripwidth/2) { } ;
+		% Text
+		\node[text width=(\cardwidth-\strippadding-\stripwidth-2*\textpadding-0.3)*1cm,below right, anchor=north west] at (\strippadding+\stripwidth+\textpadding,\cardheight-\textpadding-\paddingtop)
+		{{\flushleft \Large #3\par}};
+		\fill[black, anchor=south west](\stripwidth cm + \circlesize*1.5 pt, \circlesize*2 pt) circle(\circlesize pt);
+		\node[anchor=center, color=white] at (\stripwidth cm + \circlesize*1.5 pt, \circlesize*2 pt) {\textbf{#1}};
+		\node[anchor=west, color=black] at (\stripwidth cm + \circlesize*2.5 pt, \circlesize*2 pt)
+		{\ifnum#1=1
+			Karte
+		\else
+			Karten
+		\fi};
+		% Category
+		\node[anchor=south east] at (\cardwidth, 0) {\scriptsize #2};
+	\end{tikzpicture}%
+	\hspace{0pt}%
+}%
+
+\newcommand{\drawWhitecard}[2] {%
+	\begin{tikzpicture}%
+		\draw (0,0) rectangle (\cardwidth cm,\cardheight cm);
+		% Bar left
+		\draw[gray] (0,0) rectangle (\stripwidth,\cardheight) node[rotate=90,above left,black,font=\large] {\titleleft};
+		% Icon
+		\node[fill=black, draw=black, minimum height = \cardsymbolwidth cm, minimum width = \cardsymbolheight cm, anchor=east, rotate=15] at (4*\stripwidth/5, \stripwidth/2) { } ;
+		\node[fill=white, draw=black, minimum height = \cardsymbolwidth cm, minimum width = \cardsymbolheight cm, anchor=east, rotate=0] at (4*\stripwidth/5, \stripwidth/2) { } ;
+		\node[fill=white, draw=black, minimum height = \cardsymbolwidth cm, minimum width = \cardsymbolheight cm, anchor=east, rotate=-20] at (4*\stripwidth/5, \stripwidth/2) { } ;
+		% Text
+		\node[text width=(\cardwidth-\strippadding-\stripwidth-2*\textpadding-0.3)*1cm,below right, anchor=north west] at (\strippadding+\stripwidth+\textpadding,\cardheight-\textpadding-\paddingtop)
+		{{\flushleft \LARGE #2\par}};
+		% Category
+		\node[anchor=south east] at (\cardwidth, 0) {#1};
+	\end{tikzpicture}%
+	\hspace{0pt}%
+}%
+
+
+\newcommand{\drawTitlecard}[1] {%
+	\begin{tikzpicture}%
+		\draw (0,0) rectangle (\cardwidth cm,\cardheight cm);
+		% Bar middle
+		\draw[black] (0,\cardheight/2 - \titleheight) rectangle (\cardwidth,\stripwidth*3/4 + \cardheight/2 - \titleheight);
+		\node[anchor = south , black,font=\scriptsize] at (\cardwidth/2,\cardheight/2 - \titleheight - \stripwidth/20) {\titleleft};
+		%categorytitle
+		\fill[black](0,\cardheight/2 + \titleheight) rectangle (\cardwidth, \stripwidth*3/4 + \cardheight/2 - \titleheight);
+		\node[anchor = center, white,font=\Huge] at (\cardwidth/2,\cardheight/2 + \titleheight*0.2) {#1};
+		% Icon
+		\node[fill=black, draw=black, minimum height = \cardsymbolwidthbig cm, minimum width = \cardsymbolheightbig cm, anchor=south, rotate=15] at (\cardwidth/2, 1cm) { } ;
+		\node[fill=white, draw=black, minimum height = \cardsymbolwidthbig cm, minimum width = \cardsymbolheightbig cm, anchor=south, rotate=0] at (\cardwidth/2, 1cm) { } ;
+		\node[fill=white, draw=black, minimum height = \cardsymbolwidthbig cm, minimum width = \cardsymbolheightbig cm, anchor=south, rotate=-20] at (\cardwidth/2, 1cm) { } ;
+		% Text
+	\end{tikzpicture}%
+	\hspace{0pt}%
+}%
+
+\newcommand{\drawWhitecardback} {%
+	\begin{tikzpicture}%
+		\draw (0,0) rectangle (\cardwidth cm,\cardheight cm);
+		% Title
+		\node[anchor=center,text width=(\cardwidth-\strippadding-\stripwidth-2*\textpadding-0.3)*1cm,below right] at (\strippadding+\stripwidth+\textpadding,\cardheight-\textpadding-\paddingtop)
+		{{\flushleft \Huge \titleback\par}};
+		% Icon
+		\node[fill=black, draw=black, minimum height = \cardsymbolwidthbig cm, minimum width = \cardsymbolheightbig cm, anchor=south, rotate=15] at (\cardwidth/2, 1cm) { } ;
+		\node[fill=white, draw=black, minimum height = \cardsymbolwidthbig cm, minimum width = \cardsymbolheightbig cm, anchor=south, rotate=0] at (\cardwidth/2, 1cm) { } ;
+		\node[fill=white, draw=black, minimum height = \cardsymbolwidthbig cm, minimum width = \cardsymbolheightbig cm, anchor=south, rotate=-20] at (\cardwidth/2, 1cm) { } ;
+		% Text
+	\end{tikzpicture}%
+	\hspace{0pt}%
+}%
+
+\newcommand{\drawBlackcardback} {%
+	\begin{tikzpicture}%
+		\draw (0,0) rectangle (\cardwidth cm,\cardheight cm);
+		% Bar left
+		\fill[black] (0, 0) rectangle (\stripwidth,\cardheight) node[rotate=90,above left,white,font=\large] {};
+		% Title
+		\node[anchor=center,black,text width=(\cardwidth-\strippadding-\stripwidth-2*\textpadding-0.3)*1cm,below right] at (\strippadding+\stripwidth+\textpadding,\cardheight-\textpadding-\paddingtop)
+		{{\flushleft \Huge \titleback\par}};
+		% Icon
+		\node[fill=black, draw=black, minimum height = \cardsymbolwidthbig cm, minimum width = \cardsymbolheightbig cm, anchor=south, rotate=15] at (\cardwidth/2, 1cm) { } ;
+		\node[fill=white, draw=black, minimum height = \cardsymbolwidthbig cm, minimum width = \cardsymbolheightbig cm, anchor=south, rotate=0] at (\cardwidth/2, 1cm) { } ;
+		\node[fill=white, draw=black, minimum height = \cardsymbolwidthbig cm, minimum width = \cardsymbolheightbig cm, anchor=south, rotate=-20] at (\cardwidth/2, 1cm) { } ;
+		% Text
+	\end{tikzpicture}%
+	\hspace{0pt}%
+}%

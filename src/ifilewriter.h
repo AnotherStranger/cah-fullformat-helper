@@ -15,31 +15,35 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+#ifndef IFILEWRITER_H
+#define IFILEWRITER_H
 
-#ifndef MYSETTINGS_H
-#define MYSETTINGS_H
+#include <QObject>
+#include <QSharedPointer>
+#include "cardsdeck.h"
 
-#include <QSettings>
+namespace cah {
 
-class MySettings : public QSettings {
+enum class IoResult { OK, COULD_NOT_OPEN, RESOURCE_NOT_AVAILABLE };
+
+class IFileWriter : public QObject {
+  Q_OBJECT
  public:
-  MySettings();
+  explicit IFileWriter(QObject* parent = nullptr);
 
-  QString getDbPath();
-  void setDbPath(const QString& path);
+  virtual IoResult writeFile(const QString& targetFile,
+                             QSharedPointer<CardsDeck> deck) = 0;
 
-  int getDuplicateThreshold();
-  void setDuplicateThreshold(int value);
+ protected:
+  IoResult writeTextFile(const QString& targetFile, const QStringList& content);
 
-  QString getLatexCommand();
-  void setLatexCommand(const QString& command);
+  IoResult readResource(const QString& resource, QString& contents);
 
- private:
-  static constexpr const char* KEY_DB_PATH = "data/dbpath";
-  static constexpr const char* KEY_DUPLICATE_THRESHOLD =
-      "gui/duplicatethreshold";
-  static constexpr const char* KEY_LATEX_COMMAND = "cmd/latex";
+ signals:
+
+ public slots:
 };
+}
 
-#endif  // MYSETTINGS_H
+#endif  // IFILEWRITER_H

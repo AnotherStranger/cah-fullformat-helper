@@ -7,4 +7,8 @@
         <file>images/save.svg</file>
         <file>images/settings.svg</file>
     </qresource>
+    <qresource prefix="/templates">
+        <file>templates/master.tex</file>
+        <file>templates/commands.tex</file>
+    </qresource>
 </RCC>

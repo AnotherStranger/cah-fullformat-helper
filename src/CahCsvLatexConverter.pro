@@ -28,10 +28,13 @@ SOURCES += main.cpp \
     mainwindow.cpp \
     commandlineparser.cpp \
     dbmanager.cpp \
-    filewriter.cpp \
     carddatamappingwidget.cpp \
     settingsdialog.cpp \
-    mysettings.cpp
+    mysettings.cpp \
+    ifilewriter.cpp \
+    csvfilewriter.cpp \
+    latexfilewriter.cpp \
+    pdffilewriter.cpp
 
 HEADERS += \
     whitecard.h \
@@ -43,10 +46,13 @@ HEADERS += \
     mainwindow.h \
     commandlineparser.h \
     dbmanager.h \
-    filewriter.h \
     carddatamappingwidget.h \
     settingsdialog.h \
-    mysettings.h
+    mysettings.h \
+    ifilewriter.h \
+    csvfilewriter.h \
+    latexfilewriter.h \
+    pdffilewriter.h
 
 FORMS += \
     mainwindow.ui \

@@ -40,3 +40,11 @@ int MySettings::getDuplicateThreshold() {
 void MySettings::setDuplicateThreshold(int value) {
   setValue(KEY_DUPLICATE_THRESHOLD, value);
 }
+
+void MySettings::setLatexCommand(const QString &command) {
+  setValue(KEY_LATEX_COMMAND, command);
+}
+
+QString MySettings::getLatexCommand() {
+  return value(KEY_LATEX_COMMAND, "pdflatex").toString();
+}

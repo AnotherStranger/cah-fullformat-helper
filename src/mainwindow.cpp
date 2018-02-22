@@ -23,9 +23,12 @@
 #include <QMessageBox>
 #include <QSqlRecord>
 #include <QStandardPaths>
+#include "csvfilewriter.h"
 #include "dbmanager.h"
 #include "fileparser.h"
-#include "filewriter.h"
+#include "ifilewriter.h"
+#include "latexfilewriter.h"
+#include "pdffilewriter.h"
 #include "settingsdialog.h"
 #include "ui_mainwindow.h"
 
@@ -120,17 +123,20 @@ void MainWindow::on_actionSpeichern_triggered() {
 void MainWindow::on_actionExport_triggered() {
   ui->statusbar->showMessage(tr("Exporting database..."));
   ensureConsistentState();
+
+  cah::IFileWriter *writer;
   auto cards = database->selectCards();
 
-  QString filter = "LaTeX files (*.tex);;CSV files (*.csv)";
+  QString filter = "LaTeX files (*.tex);;CSV files (*.csv);; PDF files (*.pdf)";
   QString filename = QFileDialog::getSaveFileName(this, tr("Export to file"),
                                                   "", filter, &filter);
 
-  cah::FileFormat format;
   if (filename.endsWith(".csv")) {
-    format = cah::FileFormat::CSV;
+    writer = new cah::CsvFileWriter(this);
   } else if (filename.endsWith(".tex")) {
-    format = cah::FileFormat::TEX;
+    writer = new cah::LatexFileWriter(this);
+  } else if (filename.endsWith(".pdf")) {
+    writer = new cah::PdfFileWriter(this);
   } else {
     QMessageBox::information(this, tr("No valid filename given"),
                              tr("The given filename has no valid extension "
@@ -140,21 +146,14 @@ void MainWindow::on_actionExport_triggered() {
     return;
   }
 
-  auto successful = fileWriter.save(cards, filename, format);
-
+  auto successful = writer->writeFile(filename, cards);
   switch (successful) {
-    case cah::WriteResult::COULD_NOT_OPEN:
+    case cah::IoResult::COULD_NOT_OPEN:
       QMessageBox::critical(this, tr("Could not save file."),
                             tr("The file could not be opened for writing."),
                             QMessageBox::Ok);
       break;
-    case cah::WriteResult::UNSUPPORTED_FORMAT:
-      QMessageBox::critical(
-          this, tr("Could not save file."),
-          tr("Saving to the chosen file format is not implemented (yet)."),
-          QMessageBox::Ok);
-      break;
-    case ::cah::WriteResult::OK:
+    case ::cah::IoResult::OK:
       QMessageBox::information(this, tr("Saving successful"),
                                tr("The file was saved successfully."),
                                QMessageBox::Ok);

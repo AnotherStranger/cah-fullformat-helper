@@ -15,31 +15,22 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+#ifndef LATEXFILEWRITER_H
+#define LATEXFILEWRITER_H
 
-#ifndef MYSETTINGS_H
-#define MYSETTINGS_H
+#include <ifilewriter.h>
+#include <QObject>
 
-#include <QSettings>
-
-class MySettings : public QSettings {
+namespace cah {
+class LatexFileWriter : public IFileWriter {
+  Q_OBJECT
  public:
-  MySettings();
+  LatexFileWriter(QObject *parent = nullptr);
 
-  QString getDbPath();
-  void setDbPath(const QString& path);
-
-  int getDuplicateThreshold();
-  void setDuplicateThreshold(int value);
-
-  QString getLatexCommand();
-  void setLatexCommand(const QString& command);
-
- private:
-  static constexpr const char* KEY_DB_PATH = "data/dbpath";
-  static constexpr const char* KEY_DUPLICATE_THRESHOLD =
-      "gui/duplicatethreshold";
-  static constexpr const char* KEY_LATEX_COMMAND = "cmd/latex";
+  virtual IoResult writeFile(const QString &targetFile,
+                             QSharedPointer<CardsDeck> deck) override;
 };
+}
 
-#endif  // MYSETTINGS_H
+#endif  // LATEXFILEWRITER_H
