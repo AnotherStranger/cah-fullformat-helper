@@ -17,7 +17,7 @@ CardDataMappingWidget::CardDataMappingWidget(QTableView *view,
 }
 
 void CardDataMappingWidget::setupDuplicateView() {
-  duplicateThreshold = ui->duplicateSlider->value();
+  duplicateThreshold = settings.getDuplicateThreshold();
   duplicateThresholdMax = ui->duplicateSlider->maximum();
 
   ui->duplicateSpin->setMinimum(0);
@@ -75,6 +75,10 @@ void CardDataMappingWidget::findDuplicates() {
           cah::isPossibleDuplicate(currentText, currentRowText,
                                    duplicateThreshold / duplicateThresholdMax);
       if (isDuplicate) {
+        // Calculates the levenshtein distance twice.
+        // However isPossibleDuplicates only calculates the distance if it can
+        // be lower than the threshold.
+        // Therfore this approach is faster.
         possibleDuplicates.append(
             duplicate(currentRowText,
                       cah::levenshtein_distance(currentRowText.toStdString(),

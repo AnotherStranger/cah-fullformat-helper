@@ -29,7 +29,9 @@ SOURCES += main.cpp \
     commandlineparser.cpp \
     dbmanager.cpp \
     filewriter.cpp \
-    carddatamappingwidget.cpp
+    carddatamappingwidget.cpp \
+    settingsdialog.cpp \
+    mysettings.cpp
 
 HEADERS += \
     whitecard.h \
@@ -42,11 +44,14 @@ HEADERS += \
     commandlineparser.h \
     dbmanager.h \
     filewriter.h \
-    carddatamappingwidget.h
+    carddatamappingwidget.h \
+    settingsdialog.h \
+    mysettings.h
 
 FORMS += \
     mainwindow.ui \
-    carddatamappingwidget.ui
+    carddatamappingwidget.ui \
+    settingsdialog.ui
 
 RESOURCES += \
     resources.qrc

@@ -9,6 +9,7 @@
 #include <QTableView>
 #include <QWidget>
 #include "cardsdeck.h"
+#include "mysettings.h"
 
 namespace Ui {
 class CardDataMappingWidget;
@@ -38,6 +39,8 @@ class CardDataMappingWidget : public QWidget {
   QSqlTableModel *model;
   QDataWidgetMapper *mapper;
   QTableView *view;
+
+  MySettings settings;
 
   double duplicateThreshold, duplicateThresholdMax;
 

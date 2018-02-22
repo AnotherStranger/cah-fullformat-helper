@@ -8,6 +8,7 @@
 #include "dbmanager.h"
 #include "fileparser.h"
 #include "filewriter.h"
+#include "mysettings.h"
 
 namespace Ui {
 class MainWindow;
@@ -36,8 +37,11 @@ class MainWindow : public QMainWindow {
 
   void on_tableView_doubleClicked(const QModelIndex &index);
 
+  void on_actionOptions_triggered();
+
  private:
   Ui::MainWindow *ui;
+  MySettings settings;
   QSqlTableModel *tableViewModel;
   QTableView *cardsTableView;
 
@@ -49,6 +53,7 @@ class MainWindow : public QMainWindow {
 
   void prepareCardsTableView();
   void ensureConsistentState();
+  void setupDb();
 };
 
 #endif  // MAINWINDOW_H

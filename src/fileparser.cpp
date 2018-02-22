@@ -13,7 +13,7 @@ FileParser::FileParser(QObject *parent) : QObject(parent) {}
 QList<QSharedPointer<Card>> FileParser::readCsv(QString filename) {
   QFile file(filename);
   if (!file.open(QIODevice::ReadOnly)) {
-    throw std::runtime_error("Could not open CSV-File.");
+    throw std::runtime_error(tr("Could not open CSV-File."));
   }
   QList<QSharedPointer<Card>> cards;
 
@@ -51,7 +51,7 @@ QList<QSharedPointer<Card>> FileParser::readCsv(QString filename) {
 QList<QSharedPointer<Card>> FileParser::readLatex(QString filename) {
   QFile file(filename);
   if (!file.open(QIODevice::ReadOnly)) {
-    throw std::runtime_error("Could not open CSV-File.");
+    throw std::runtime_error(tr("Could not open LaTeX-File."));
   }
   QList<QSharedPointer<Card>> cards;
 

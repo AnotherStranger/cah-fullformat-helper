@@ -7,24 +7,33 @@
 #include "dbmanager.h"
 #include "fileparser.h"
 #include "filewriter.h"
+#include "settingsdialog.h"
 #include "ui_mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow) {
   ui->setupUi(this);
 
-  // TODO: make sqliteDB-path a preference
-  QDir path = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation);
-  if (!path.exists()) {
-    path.mkdir(".");
-  }
-  database = new cah::DbManager(path.absolutePath().append("/cards.db"));
+  setupDb();
 
   prepareCardsTableView();
   this->centralWidget()->layout()->addWidget(mappingWidget);
 
   cardsTableView->show();
   ui->statusbar->showMessage("ready");
+}
+
+void MainWindow::setupDb() {
+  QString path = settings.getDbPath();
+
+  QFile dbFile(path);
+  if (!dbFile.exists()) {
+    QDir dbDir(path);
+    if (!dbDir.exists()) {
+      dbDir.mkpath(".");
+    }
+  }
+  database = new cah::DbManager(path, this);
 }
 
 void MainWindow::prepareCardsTableView() {
@@ -81,26 +90,22 @@ void MainWindow::closeEvent(QCloseEvent *event) {
   event->accept();
 }
 
-MainWindow::~MainWindow() {
-  delete tableViewModel;
-  delete database;
-  delete ui;
-}
+MainWindow::~MainWindow() { delete ui; }
 
 void MainWindow::on_actionSpeichern_triggered() {
-  ui->statusbar->showMessage("Saving changes...");
+  ui->statusbar->showMessage(tr("Saving changes..."));
   tableViewModel->submitAll();
-  ui->statusbar->showMessage("ready");
+  ui->statusbar->showMessage(tr("ready"));
 }
 
 void MainWindow::on_actionExport_triggered() {
-  ui->statusbar->showMessage("Exporting database...");
+  ui->statusbar->showMessage(tr("Exporting database..."));
   ensureConsistentState();
   auto cards = database->selectCards();
 
   QString filter = "LaTeX files (*.tex);;CSV files (*.csv)";
-  QString filename =
-      QFileDialog::getSaveFileName(this, "Export to file", "", filter, &filter);
+  QString filename = QFileDialog::getSaveFileName(this, tr("Export to file"),
+                                                  "", filter, &filter);
 
   cah::FileFormat format;
   if (filename.endsWith(".csv")) {
@@ -108,10 +113,10 @@ void MainWindow::on_actionExport_triggered() {
   } else if (filename.endsWith(".tex")) {
     format = cah::FileFormat::TEX;
   } else {
-    QMessageBox::information(
-        this, "No valid filename given",
-        "The given filename has no valid extension (*.csv or *.tex). Aborting.",
-        QMessageBox::Ok);
+    QMessageBox::information(this, tr("No valid filename given"),
+                             tr("The given filename has no valid extension "
+                                "(*.csv or *.tex). Aborting."),
+                             QMessageBox::Ok);
     ui->statusbar->showMessage("ready");
     return;
   }
@@ -120,38 +125,39 @@ void MainWindow::on_actionExport_triggered() {
 
   switch (successful) {
     case cah::WriteResult::COULD_NOT_OPEN:
-      QMessageBox::critical(this, "Could not save file.",
-                            "The file could not be opened for writing.",
+      QMessageBox::critical(this, tr("Could not save file."),
+                            tr("The file could not be opened for writing."),
                             QMessageBox::Ok);
       break;
     case cah::WriteResult::UNSUPPORTED_FORMAT:
       QMessageBox::critical(
-          this, "Could not save file.",
-          "Saving to the chosen file format is not implemented (yet).",
+          this, tr("Could not save file."),
+          tr("Saving to the chosen file format is not implemented (yet)."),
           QMessageBox::Ok);
       break;
     case ::cah::WriteResult::OK:
-      QMessageBox::information(this, "Saving successful",
-                               "The file was saved successfully.",
+      QMessageBox::information(this, tr("Saving successful"),
+                               tr("The file was saved successfully."),
                                QMessageBox::Ok);
       break;
     default:
-      QMessageBox::critical(this, "Unexpected result",
-                            "Saving the file gave an unexpected result. Though "
-                            "saving was possibly successful.",
-                            QMessageBox::Ok);
+      QMessageBox::critical(
+          this, tr("Unexpected result"),
+          tr("Saving the file gave an unexpected result. Though "
+             "saving was possibly successful."),
+          QMessageBox::Ok);
       break;
   }
   ui->statusbar->showMessage("ready");
 }
 
 void MainWindow::on_actionImport_triggered() {
-  ui->statusbar->showMessage("Importing cards...");
+  ui->statusbar->showMessage(tr("Importing cards..."));
   // Ask whether unsaved changes shall be saved before inserting and reloading
   ensureConsistentState();
 
-  QString filename = QFileDialog::getOpenFileName(this, "Open CAH-File", "",
-                                                  "Text Files (*.tex, *.csv)");
+  QString filename = QFileDialog::getOpenFileName(
+      this, tr("Open CAH-File"), "", tr("Text Files (*.tex, *.csv)"));
 
   QList<QSharedPointer<cah::Card>> cards;
   if (filename.endsWith(".csv")) {
@@ -185,7 +191,7 @@ void MainWindow::on_actionAdd_Card_triggered() {
 }
 
 void MainWindow::on_actionRemove_Card_s_triggered() {
-  ui->statusbar->showMessage("Removing selected cards...");
+  ui->statusbar->showMessage(tr("Removing selected cards..."));
 
   QModelIndexList indexes = cardsTableView->selectionModel()->selectedIndexes();
   QList<int> rowsToDelete;
@@ -205,10 +211,15 @@ void MainWindow::on_actionRemove_Card_s_triggered() {
     tableViewModel->removeRow(currentRow);
   }
   tableViewModel->submitAll();
-  ui->statusbar->showMessage("ready");
+  ui->statusbar->showMessage(tr("ready"));
 }
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index) {
   Q_UNUSED(index)
   mappingWidget->startEditing();
+}
+
+void MainWindow::on_actionOptions_triggered() {
+  SettingsDialog dialog;
+  dialog.exec();
 }

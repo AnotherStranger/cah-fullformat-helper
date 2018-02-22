@@ -36,7 +36,6 @@ int main(int argc, char* argv[]) {
   QApplication::setApplicationVersion("0.1");
 
   // create the main class
-  // Why do they have to be declared here?
   QSharedPointer<MainWindow> w;  // We need shared pointers here because the
                                  // object gets initialized later on.
   QSharedPointer<MainClass> myMain;
