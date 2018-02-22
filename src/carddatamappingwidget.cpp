@@ -11,8 +11,26 @@ CardDataMappingWidget::CardDataMappingWidget(QTableView *view,
       model(model),
       view(view) {
   ui->setupUi(this);
-  setupMapping();
 
+  setupMapping();
+  setupDuplicateView();
+}
+
+void CardDataMappingWidget::setupDuplicateView() {
+  duplicateThreshold = ui->duplicateSlider->value();
+  duplicateThresholdMax = ui->duplicateSlider->maximum();
+
+  ui->duplicateSpin->setMinimum(0);
+  ui->duplicateSpin->setMaximum(duplicateThresholdMax);
+  ui->duplicateSpin->setValue(duplicateThreshold);
+
+  // Update threshold slider and spin
+  connect(ui->duplicateSlider, SIGNAL(valueChanged(int)), ui->duplicateSpin,
+          SLOT(setValue(int)));
+  connect(ui->duplicateSpin, SIGNAL(valueChanged(int)), ui->duplicateSlider,
+          SLOT(setValue(int)));
+
+  // Connect text changes to searching duplicates
   connect(ui->textEdit, SIGNAL(textChanged()), this, SLOT(cardTextChanged()));
 }
 
@@ -32,7 +50,18 @@ void CardDataMappingWidget::setupMapping() {
           SLOT(setCurrentModelIndex(QModelIndex)));
 }
 
-void CardDataMappingWidget::cardTextChanged() {
+void CardDataMappingWidget::cardTextChanged() { findDuplicates(); }
+
+void CardDataMappingWidget::findDuplicates() {
+  struct duplicate {
+   public:
+    duplicate(QString t, int l) : text(t), levensthein_distance(l) {}
+
+    QString text;
+    int levensthein_distance;
+  };
+  QList<duplicate> possibleDuplicates;
+
   QString currentText = ui->textEdit->toPlainText();
 
   ui->duplicatesTable->clear();
@@ -42,12 +71,27 @@ void CardDataMappingWidget::cardTextChanged() {
     if (currentRow != selectedRow) {
       QString currentRowText =
           model->data(model->index(currentRow, 3)).toString();
-      bool duplicate =
-          cah::isPossibleDuplicate(currentText, currentRowText, 0.6);
-      if (duplicate) {
-        new QListWidgetItem(currentRowText, ui->duplicatesTable);
+      bool isDuplicate =
+          cah::isPossibleDuplicate(currentText, currentRowText,
+                                   duplicateThreshold / duplicateThresholdMax);
+      if (isDuplicate) {
+        possibleDuplicates.append(
+            duplicate(currentRowText,
+                      cah::levenshtein_distance(currentRowText.toStdString(),
+                                                currentText.toStdString())));
       }
     }
+  }
+
+  // sort duplicates
+  auto duplicateLess = [](duplicate &i1, duplicate &i2) -> bool {
+    return i1.levensthein_distance < i2.levensthein_distance;
+  };
+  std::sort(possibleDuplicates.begin(), possibleDuplicates.end(),
+            duplicateLess);
+
+  for (auto dup : possibleDuplicates) {
+    new QListWidgetItem(dup.text, ui->duplicatesTable);
   }
 }
 
@@ -66,4 +110,9 @@ void CardDataMappingWidget::on_buttonBox_accepted() {
 void CardDataMappingWidget::on_buttonBox_rejected() {
   mapper->revert();
   model->revertAll();
+}
+
+void CardDataMappingWidget::on_duplicateSlider_valueChanged(int value) {
+  duplicateThreshold = value;
+  findDuplicates();
 }

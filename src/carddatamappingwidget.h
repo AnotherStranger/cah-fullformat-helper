@@ -31,13 +31,19 @@ class CardDataMappingWidget : public QWidget {
 
   void on_buttonBox_rejected();
 
+  void on_duplicateSlider_valueChanged(int value);
+
  private:
   Ui::CardDataMappingWidget *ui;
   QSqlTableModel *model;
   QDataWidgetMapper *mapper;
   QTableView *view;
 
+  double duplicateThreshold, duplicateThresholdMax;
+
   void setupMapping();
+  void setupDuplicateView();
+  void findDuplicates();
 };
 
 #endif  // CARDDATAMAPPINGWIDGET_H
