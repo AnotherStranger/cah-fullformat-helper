@@ -1,3 +1,22 @@
+/*
+ * cahhelper a simple-to-use application for managing your own Cards Against
+ * Humanity game
+ * Copyright (C) 2018  André Büsgen
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "mainwindow.h"
 #include <QDebug>
 #include <QFileDialog>
@@ -222,4 +241,44 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index) {
 void MainWindow::on_actionOptions_triggered() {
   SettingsDialog dialog;
   dialog.exec();
+}
+
+void MainWindow::on_actionAbout_triggered() {
+  QString aboutText;
+  QTextStream about(&aboutText);
+
+  about << "cahhelper a simple-to-use application for managing your own Cards "
+           "Against Humanity game"
+        << endl;
+  about << "Copyright (C) 2018  André Büsgen" << endl << endl;
+
+  about
+      << "This program is free software: you can redistribute it and/or modify"
+      << endl;
+  about
+      << "it under the terms of the GNU General Public License as published by"
+      << endl;
+  about << "the Free Software Foundation, either version 3 of the License, or"
+        << endl;
+  about << "(at your option) any later version." << endl << endl;
+
+  about << "This program is distributed in the hope that it will be useful,"
+        << endl;
+  about << "but WITHOUT ANY WARRANTY; without even the implied warranty of"
+        << endl;
+  about << "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the"
+        << endl;
+  about << "GNU General Public License for more details." << endl << endl;
+
+  about << "You should have received a copy of the GNU General Public License"
+        << endl;
+  about
+      << "along with this program. If not, see <http://www.gnu.org/licenses/>."
+      << endl
+      << endl;
+
+  about << "You can get the source code at: "
+           "https://github.com/AnotherStranger/cah-fullformat-helper"
+        << endl;
+  QMessageBox::about(this, tr("About"), aboutText);
 }
