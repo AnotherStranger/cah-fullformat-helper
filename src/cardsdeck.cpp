@@ -119,6 +119,11 @@ bool isPossibleDuplicate(QSharedPointer<Card> card, QSharedPointer<Card> other,
   return isPossibleDuplicate(card->getText(), other->getText(), threshold);
 }
 
+double levenshtein_normed(const std::string &s1, const std::string &s2) {
+  double maxLevenshtein = std::max(s1.size(), s2.size());
+  return levenshtein_distance(s1, s2) / maxLevenshtein;
+}
+
 int levenshtein_distance(const std::string &s1, const std::string &s2) {
   int s1len = s1.size();
   int s2len = s2.size();

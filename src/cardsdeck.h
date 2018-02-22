@@ -158,6 +158,15 @@ bool isPossibleDuplicate(QSharedPointer<Card> card, QSharedPointer<Card> other,
  */
 bool isPossibleDuplicate(const QString &first, const QString &other,
                          double threshold);
+
+/*!
+ * \brief calculates the normed levensthein distancer
+ * \param s1 first string to compare
+ * \param s2 second string to compare
+ * \return The normed levenshtein-distance. 1 is the maximal distance, 0 the
+ * minimal.
+ */
+double levenshtein_normed(const std::string &s1, const std::string &s2);
 }
 
 #endif  // CARDSDECK_H

@@ -36,7 +36,6 @@ class CardDataMappingWidget : public QWidget {
   QSqlTableModel *model;
   QDataWidgetMapper *mapper;
   QTableView *view;
-  QString oldText;
 
   void setupMapping();
 };

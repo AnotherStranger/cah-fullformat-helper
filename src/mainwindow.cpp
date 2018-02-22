@@ -209,5 +209,6 @@ void MainWindow::on_actionRemove_Card_s_triggered() {
 }
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index) {
+  Q_UNUSED(index)
   mappingWidget->startEditing();
 }
