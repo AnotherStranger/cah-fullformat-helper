@@ -21,8 +21,9 @@ namespace cah {
 
 CsvFileWriter::CsvFileWriter(QObject *parent) : IFileWriter(parent) {}
 
-IoResult CsvFileWriter::writeFile(const QString &targetFile,
-                                  QSharedPointer<CardsDeck> deck) {
-  return writeTextFile(targetFile, deck->toCsv());
+void CsvFileWriter::writeFile(const QString &targetFile,
+                              QSharedPointer<CardsDeck> deck) {
+  IoResult res = writeTextFile(targetFile, deck->toCsv());
+  emit exportFinished(res, targetFile);
 }
 }

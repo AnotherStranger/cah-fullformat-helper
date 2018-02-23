@@ -28,8 +28,8 @@ class LatexFileWriter : public IFileWriter {
  public:
   LatexFileWriter(QObject *parent = nullptr);
 
-  virtual IoResult writeFile(const QString &targetFile,
-                             QSharedPointer<CardsDeck> deck) override;
+  virtual void writeFile(const QString &targetFile,
+                         QSharedPointer<CardsDeck> deck) override;
 };
 }
 

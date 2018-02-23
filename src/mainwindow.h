@@ -26,6 +26,7 @@
 #include "carddatamappingwidget.h"
 #include "dbmanager.h"
 #include "fileparser.h"
+#include "ifilewriter.h"
 #include "mysettings.h"
 
 namespace Ui {
@@ -59,11 +60,15 @@ class MainWindow : public QMainWindow {
 
   void on_actionAbout_triggered();
 
+ public slots:
+  void exportFinished(cah::IoResult res, QString filename);
+
  private:
   Ui::MainWindow *ui;
   MySettings settings;
   QSqlTableModel *tableViewModel;
   QTableView *cardsTableView;
+  cah::IFileWriter *writer = nullptr;
 
   CardDataMappingWidget *mappingWidget;
 

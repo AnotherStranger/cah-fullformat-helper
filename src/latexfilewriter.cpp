@@ -21,8 +21,9 @@ namespace cah {
 
 LatexFileWriter::LatexFileWriter(QObject *parent) : IFileWriter(parent) {}
 
-IoResult LatexFileWriter::writeFile(const QString &targetFile,
-                                    QSharedPointer<CardsDeck> deck) {
-  return writeTextFile(targetFile, deck->toLatex());
+void LatexFileWriter::writeFile(const QString &targetFile,
+                                QSharedPointer<CardsDeck> deck) {
+  IoResult res = writeTextFile(targetFile, deck->toLatex());
+  emit exportFinished(res, targetFile);
 }
 }

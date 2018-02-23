@@ -27,7 +27,7 @@ IoResult IFileWriter::writeTextFile(const QString &targetFile,
                                     const QStringList &content) {
   QFile outputFile(targetFile);
   if (!outputFile.open(QIODevice::ReadWrite)) {
-    return IoResult::COULD_NOT_OPEN;
+    return IoResult::IO_ERROR;
   }
 
   QTextStream output(&outputFile);

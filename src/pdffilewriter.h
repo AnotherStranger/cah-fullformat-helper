@@ -20,6 +20,8 @@
 #define PDFFILEWRITER_H
 
 #include <QObject>
+#include <QProcess>
+#include <QTemporaryDir>
 #include "ifilewriter.h"
 #include "mysettings.h"
 
@@ -29,11 +31,18 @@ class PdfFileWriter : public IFileWriter {
  public:
   PdfFileWriter(QObject *parent = nullptr);
 
-  virtual IoResult writeFile(const QString &targetFile,
-                             QSharedPointer<CardsDeck> deck) override;
+  virtual void writeFile(const QString &targetFile,
+                         QSharedPointer<CardsDeck> deck) override;
+
+ private slots:
+  void latexFinished(int exitCode, QProcess::ExitStatus exitStatus);
+  void latexErrorOccurred(QProcess::ProcessError error);
 
  private:
   MySettings settings;
+  QTemporaryDir tempDir;
+  QProcess *process;
+  QString targetFile;
 };
 }
 

@@ -19,27 +19,35 @@
 #include "pdffilewriter.h"
 #include <QDebug>
 #include <QDir>
-#include <QProcess>
-#include <QTemporaryFile>
 
 namespace cah {
-PdfFileWriter::PdfFileWriter(QObject *parent) : IFileWriter(parent) {}
+PdfFileWriter::PdfFileWriter(QObject *parent) : IFileWriter(parent) {
+  // create Process Object and connect slots.
+  process = new QProcess(this);
+  connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this,
+          SLOT(latexFinished(int, QProcess::ExitStatus)));
+  connect(process, SIGNAL(errorOccurred(QProcess::ProcessError)), this,
+          SLOT(latexErrorOccurred(QProcess::ProcessError)));
+}
 
-IoResult PdfFileWriter::writeFile(const QString &targetFile,
-                                  QSharedPointer<CardsDeck> deck) {
+void PdfFileWriter::writeFile(const QString &targetFile,
+                              QSharedPointer<CardsDeck> deck) {
+  this->targetFile = targetFile;
   QString commandsTemplate, masterTemplate;
 
   // Read commands
   IoResult res =
       readResource(":/templates/templates/commands.tex", commandsTemplate);
   if (res != IoResult::OK) {
-    return res;
+    emit exportFinished(res, targetFile);
+    return;
   }
 
   // Read master
   res = readResource(":/templates/templates/master.tex", masterTemplate);
   if (res != IoResult::OK) {
-    return res;
+    emit exportFinished(res, targetFile);
+    return;
   }
 
   // Insert commands
@@ -53,27 +61,59 @@ IoResult PdfFileWriter::writeFile(const QString &targetFile,
   }
   masterTemplate = masterTemplate.replace("<cards>", cards);
 
-  qDebug() << masterTemplate;
-  QTemporaryFile tempTex(this);
-  tempTex.open();
+  // Create temp dir and write .tex file to it
+  if (!tempDir.isValid()) {
+    emit exportFinished(IoResult::IO_ERROR, targetFile);
+    return;
+  }
+
+  QFile tempTex(tempDir.path().append("/cahhelper.tex"), this);
+  if (!tempTex.open(QFile::ReadWrite)) {
+    emit exportFinished(IoResult::IO_ERROR, targetFile);
+    return;
+  }
   qDebug() << tempTex.fileName();
 
   QTextStream texOutput(&tempTex);
-  tempTex.setAutoRemove(false);
   texOutput << masterTemplate;
   tempTex.close();
 
+  // prepare pdftex command
   QStringList args;
-  args.append("-interaction=batchmode");
+  args.append("-interaction=nonstopmode");
+  args.append("-output-directory");
+  args.append(tempDir.path());
   args.append(tempTex.fileName());
-  QProcess process;
-  process.start(settings.getLatexCommand(), args);
-  process.waitForFinished();
 
-  QDir mv;
-  mv.rename("cahhelper.pdf", targetFile);
+  process->start(settings.getLatexCommand(), args);
+}
 
-  tempTex.remove();
-  return IoResult::OK;
+void PdfFileWriter::latexFinished(int exitCode,
+                                  QProcess::ExitStatus exitStatus) {
+  if (exitCode == 0 && exitStatus == QProcess::NormalExit) {
+    QDir mv;
+    mv.cd(tempDir.path());
+    mv.rename("cahhelper.pdf", targetFile);
+    emit exportFinished(IoResult::OK, targetFile);
+    return;
+  }
+
+  emit exportFinished(IoResult::UNKNOWN_ERROR, targetFile);
+}
+
+void PdfFileWriter::latexErrorOccurred(QProcess::ProcessError error) {
+  IoResult res;
+  switch (error) {
+    case QProcess::FailedToStart:
+      res = IoResult::COMMAND_FAILED_TO_START;
+      break;
+    case QProcess::Crashed:
+      res = IoResult::COMMAND_CRASHED;
+      break;
+    default:
+      res = IoResult::UNKNOWN_ERROR;
+      break;
+  }
+  emit exportFinished(res, targetFile);
 }
 }

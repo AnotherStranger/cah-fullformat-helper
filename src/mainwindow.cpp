@@ -19,6 +19,7 @@
 
 #include "mainwindow.h"
 #include <QDebug>
+#include <QDesktopServices>
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QSqlRecord>
@@ -124,7 +125,11 @@ void MainWindow::on_actionExport_triggered() {
   ui->statusbar->showMessage(tr("Exporting database..."));
   ensureConsistentState();
 
-  cah::IFileWriter *writer;
+  if (writer != nullptr) {
+    delete writer;
+    writer = nullptr;
+  }
+
   auto cards = database->selectCards();
 
   QString filter = "LaTeX files (*.tex);;CSV files (*.csv);; PDF files (*.pdf)";
@@ -146,25 +151,54 @@ void MainWindow::on_actionExport_triggered() {
     return;
   }
 
-  auto successful = writer->writeFile(filename, cards);
-  switch (successful) {
-    case cah::IoResult::COULD_NOT_OPEN:
+  connect(writer, SIGNAL(exportFinished(cah::IoResult, QString)), this,
+          SLOT(exportFinished(cah::IoResult, QString)));
+
+  writer->writeFile(filename, cards);
+}
+
+void MainWindow::exportFinished(cah::IoResult res, QString filename) {
+  switch (res) {
+    case cah::IoResult::OK: {
+      auto answer = QMessageBox::question(
+          this, tr("Saving successful"),
+          tr("The file was saved successfully. Open File?"), QMessageBox::Yes,
+          QMessageBox::No);
+      if (answer == QMessageBox::Yes) {
+        QDesktopServices::openUrl(QString("file://").append(filename));
+      }
+    } break;
+    case cah::IoResult::IO_ERROR: {
       QMessageBox::critical(this, tr("Could not save file."),
                             tr("The file could not be opened for writing."),
                             QMessageBox::Ok);
-      break;
-    case ::cah::IoResult::OK:
-      QMessageBox::information(this, tr("Saving successful"),
-                               tr("The file was saved successfully."),
-                               QMessageBox::Ok);
-      break;
-    default:
+    } break;
+    case cah::IoResult::COMMAND_CRASHED: {
+      QMessageBox::critical(this, tr("Could not save file."),
+                            tr("An external program crashed while exporting."),
+                            QMessageBox::Ok);
+    } break;
+    case cah::IoResult::COMMAND_FAILED_TO_START: {
+      QMessageBox::critical(
+          this, tr("Could not save file."),
+          tr("An external program could not be started. Please check "
+             "the program paths in the settings and whether you have the "
+             "rights to execute them."),
+          QMessageBox::Ok);
+    } break;
+    case cah::IoResult::RESOURCE_NOT_AVAILABLE: {
+      QMessageBox::critical(this, tr("Could not save file."),
+                            tr("A resource needed to perform the export "
+                               "operation was not available."),
+                            QMessageBox::Ok);
+    } break;
+    default: {
       QMessageBox::critical(
           this, tr("Unexpected result"),
           tr("Saving the file gave an unexpected result. Though "
              "saving was possibly successful."),
           QMessageBox::Ok);
-      break;
+    } break;
   }
   ui->statusbar->showMessage("ready");
 }

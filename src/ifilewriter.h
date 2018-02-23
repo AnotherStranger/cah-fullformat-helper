@@ -25,22 +25,29 @@
 
 namespace cah {
 
-enum class IoResult { OK, COULD_NOT_OPEN, RESOURCE_NOT_AVAILABLE };
+enum class IoResult {
+  OK,
+  IO_ERROR,
+  RESOURCE_NOT_AVAILABLE,
+  UNKNOWN_ERROR,
+  COMMAND_FAILED_TO_START,
+  COMMAND_CRASHED
+};
 
 class IFileWriter : public QObject {
   Q_OBJECT
  public:
   explicit IFileWriter(QObject* parent = nullptr);
 
-  virtual IoResult writeFile(const QString& targetFile,
-                             QSharedPointer<CardsDeck> deck) = 0;
+  virtual void writeFile(const QString& targetFile,
+                         QSharedPointer<CardsDeck> deck) = 0;
+ signals:
+  void exportFinished(cah::IoResult result, QString filename);
 
  protected:
   IoResult writeTextFile(const QString& targetFile, const QStringList& content);
 
   IoResult readResource(const QString& resource, QString& contents);
-
- signals:
 
  public slots:
 };
