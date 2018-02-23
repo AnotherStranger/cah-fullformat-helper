@@ -315,3 +315,5 @@ void MainWindow::on_actionAbout_triggered() {
         << endl;
   QMessageBox::about(this, tr("About"), aboutText);
 }
+
+void MainWindow::on_actionCheck_Text_triggered() { mappingWidget->checkText(); }

@@ -33,6 +33,9 @@ void SettingsDialog::setupControls() {
   // DBPath
   ui->dbEdit->setText(settings.getDbPath());
 
+  // LaTeX command
+  ui->pdftexEdit->setText(settings.getLatexCommand());
+
   // Duplicate Threshold
   ui->thresholdSlider->setValue(settings.getDuplicateThreshold());
   ui->thresholdSpinBox->setValue(settings.getDuplicateThreshold());
@@ -51,6 +54,13 @@ void SettingsDialog::on_dbButton_clicked() {
   ui->dbEdit->setText(filename);
 }
 
+void SettingsDialog::on_pdftexButton_clicked() {
+  QString filename =
+      QFileDialog::getOpenFileName(this, tr("Path to pdflatex"), "");
+
+  ui->pdftexEdit->setText(filename);
+}
+
 void SettingsDialog::on_buttonBox_accepted() {
   // DBPAth
   QString dbSetting = ui->dbEdit->text();
@@ -58,6 +68,9 @@ void SettingsDialog::on_buttonBox_accepted() {
 
   // Duplicate Threshold
   settings.setDuplicateThreshold(ui->thresholdSlider->value());
+
+  // pdflatex command
+  settings.setLatexCommand(ui->pdftexEdit->text());
 
   // Restart
   int result = QMessageBox::question(

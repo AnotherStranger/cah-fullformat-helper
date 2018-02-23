@@ -48,3 +48,12 @@ void MySettings::setLatexCommand(const QString &command) {
 QString MySettings::getLatexCommand() {
   return value(KEY_LATEX_COMMAND, "pdflatex").toString();
 }
+
+void MySettings::setLanguagetoolUrl(const QString &url) {
+  setValue(KEY_LANGUAGETOOL_URL, url);
+}
+
+QString MySettings::getLanguagetoolUrl() {
+  return value(KEY_LANGUAGETOOL_URL, "https://languagetool.org/api/v2/check")
+      .toString();
+}

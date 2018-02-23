@@ -39,6 +39,8 @@ class SettingsDialog : public QDialog {
 
   void on_dbButton_clicked();
 
+  void on_pdftexButton_clicked();
+
  private:
   Ui::SettingsDialog *ui;
   MySettings settings;

@@ -15,35 +15,25 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+#include "languagetoolreply.h"
 
-#ifndef MYSETTINGS_H
-#define MYSETTINGS_H
+namespace lanugagetool {
+LanguagetoolReply::LanguagetoolReply(const QByteArray& json, QObject* parent)
+    : QObject(parent) {
+  QJsonDocument wholeDoc = QJsonDocument::fromJson(json);
+  QJsonObject rootObject = wholeDoc.object();
 
-#include <QSettings>
+  QJsonArray matches = rootObject["matches"].toArray();
 
-class MySettings : public QSettings {
- public:
-  MySettings();
+  foreach (const QJsonValue& value, matches) {
+    QJsonObject obj = value.toObject();
+    QString msg = obj["message"].toString();
+    int offset = obj["offset"].toInt();
+    int length = obj["length"].toInt();
+    this->matches.append(match(msg, offset, length));
+  }
+}
 
-  QString getDbPath();
-  void setDbPath(const QString& path);
-
-  int getDuplicateThreshold();
-  void setDuplicateThreshold(int value);
-
-  QString getLatexCommand();
-  void setLatexCommand(const QString& command);
-
-  QString getLanguagetoolUrl();
-  void setLanguagetoolUrl(const QString& url);
-
- private:
-  static constexpr const char* KEY_DB_PATH = "data/dbpath";
-  static constexpr const char* KEY_DUPLICATE_THRESHOLD =
-      "gui/duplicatethreshold";
-  static constexpr const char* KEY_LATEX_COMMAND = "cmd/latex";
-  static constexpr const char* KEY_LANGUAGETOOL_URL = "cmd/languagetool";
-};
-
-#endif  // MYSETTINGS_H
+QList<match> LanguagetoolReply::getMatches() { return matches; }
+}

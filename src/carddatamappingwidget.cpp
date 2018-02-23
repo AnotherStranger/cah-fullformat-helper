@@ -33,6 +33,13 @@ CardDataMappingWidget::CardDataMappingWidget(QTableView *view,
 
   setupMapping();
   setupDuplicateView();
+
+  connect(
+      &languagetoolClient,
+      SIGNAL(
+          languagetoolAnswer(QSharedPointer<lanugagetool::LanguagetoolReply>)),
+      this,
+      SLOT(checkTextAnswer(QSharedPointer<lanugagetool::LanguagetoolReply>)));
 }
 
 void CardDataMappingWidget::setupDuplicateView() {
@@ -70,6 +77,34 @@ void CardDataMappingWidget::setupMapping() {
 }
 
 void CardDataMappingWidget::cardTextChanged() { findDuplicates(); }
+
+void CardDataMappingWidget::checkText() {
+  ui->textEdit->setText(ui->textEdit->toPlainText());
+  languagetoolClient.check(ui->textEdit->toPlainText());
+}
+
+void CardDataMappingWidget::checkTextAnswer(
+    QSharedPointer<lanugagetool::LanguagetoolReply> reply) {
+  QList<lanugagetool::match> matches = reply->getMatches();
+
+  auto sortFun = [](lanugagetool::match m1, lanugagetool::match m2) -> bool {
+    return m1.offset > m2.offset;
+  };
+
+  std::sort(matches.begin(), matches.end(), sortFun);
+
+  QString editText = ui->textEdit->toPlainText();
+  for (lanugagetool::match m : matches) {
+    qDebug() << m.message;
+
+    QString beforeErr = editText.mid(0, m.offset);
+    QString errPart =
+        QString("<b>").append(editText.mid(m.offset, m.length)).append("</b>");
+    QString afterErr = editText.mid(m.offset + m.length);
+
+    ui->textEdit->setHtml(beforeErr.append(errPart).append(afterErr));
+  }
+}
 
 void CardDataMappingWidget::findDuplicates() {
   struct duplicate {

@@ -6,6 +6,7 @@
         <file>images/remove.svg</file>
         <file>images/save.svg</file>
         <file>images/settings.svg</file>
+        <file>images/spelling.svg</file>
     </qresource>
     <qresource prefix="/templates">
         <file>templates/master.tex</file>

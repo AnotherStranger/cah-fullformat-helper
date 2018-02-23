@@ -15,35 +15,41 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+#ifndef LANGUAGETOOLREPLY_H
+#define LANGUAGETOOLREPLY_H
 
-#ifndef MYSETTINGS_H
-#define MYSETTINGS_H
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QList>
+#include <QObject>
 
-#include <QSettings>
+namespace lanugagetool {
 
-class MySettings : public QSettings {
+struct match {
+  match(QString msg = "", int offset = 0, int length = 0)
+      : message(msg), offset(offset), length(length) {}
+
  public:
-  MySettings();
-
-  QString getDbPath();
-  void setDbPath(const QString& path);
-
-  int getDuplicateThreshold();
-  void setDuplicateThreshold(int value);
-
-  QString getLatexCommand();
-  void setLatexCommand(const QString& command);
-
-  QString getLanguagetoolUrl();
-  void setLanguagetoolUrl(const QString& url);
-
- private:
-  static constexpr const char* KEY_DB_PATH = "data/dbpath";
-  static constexpr const char* KEY_DUPLICATE_THRESHOLD =
-      "gui/duplicatethreshold";
-  static constexpr const char* KEY_LATEX_COMMAND = "cmd/latex";
-  static constexpr const char* KEY_LANGUAGETOOL_URL = "cmd/languagetool";
+  QString message;
+  int offset, length;
 };
 
-#endif  // MYSETTINGS_H
+class LanguagetoolReply : public QObject {
+  Q_OBJECT
+ public:
+  explicit LanguagetoolReply(const QByteArray& json, QObject* parent = nullptr);
+
+  QList<match> getMatches();
+
+ private:
+  QList<match> matches;
+
+ signals:
+
+ public slots:
+};
+}
+
+#endif  // LANGUAGETOOLREPLY_H

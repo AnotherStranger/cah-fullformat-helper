@@ -28,6 +28,7 @@
 #include <QTableView>
 #include <QWidget>
 #include "cardsdeck.h"
+#include "languagetoolclient.h"
 #include "mysettings.h"
 
 namespace Ui {
@@ -43,6 +44,7 @@ class CardDataMappingWidget : public QWidget {
   ~CardDataMappingWidget();
 
   void startEditing();
+  void checkText();
 
  private slots:
   void cardTextChanged();
@@ -53,11 +55,14 @@ class CardDataMappingWidget : public QWidget {
 
   void on_duplicateSlider_valueChanged(int value);
 
+  void checkTextAnswer(QSharedPointer<lanugagetool::LanguagetoolReply> reply);
+
  private:
   Ui::CardDataMappingWidget *ui;
   QSqlTableModel *model;
   QDataWidgetMapper *mapper;
   QTableView *view;
+  lanugagetool::LanguagetoolClient languagetoolClient;
 
   MySettings settings;
 

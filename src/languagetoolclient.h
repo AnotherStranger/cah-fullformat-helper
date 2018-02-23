@@ -15,35 +15,40 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
+*/
+#ifndef LANGUAGETOOLCLIENT_H
+#define LANGUAGETOOLCLIENT_H
 
-#ifndef MYSETTINGS_H
-#define MYSETTINGS_H
+#include <QList>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+#include <QObject>
+#include <QSharedPointer>
+#include <QUrlQuery>
+#include "languagetoolreply.h"
+#include "mysettings.h"
 
-#include <QSettings>
-
-class MySettings : public QSettings {
+namespace lanugagetool {
+class LanguagetoolClient : public QObject {
+  Q_OBJECT
  public:
-  MySettings();
+  explicit LanguagetoolClient(QObject* parent = nullptr);
 
-  QString getDbPath();
-  void setDbPath(const QString& path);
+  void check(const QString& text);
 
-  int getDuplicateThreshold();
-  void setDuplicateThreshold(int value);
+ signals:
+  void languagetoolAnswer(QSharedPointer<lanugagetool::LanguagetoolReply>);
 
-  QString getLatexCommand();
-  void setLatexCommand(const QString& command);
-
-  QString getLanguagetoolUrl();
-  void setLanguagetoolUrl(const QString& url);
+ private slots:
+  void checkFinished();
+  void slotError(QNetworkReply::NetworkError);
+  void slotSslErrors(QList<QSslError>);
 
  private:
-  static constexpr const char* KEY_DB_PATH = "data/dbpath";
-  static constexpr const char* KEY_DUPLICATE_THRESHOLD =
-      "gui/duplicatethreshold";
-  static constexpr const char* KEY_LATEX_COMMAND = "cmd/latex";
-  static constexpr const char* KEY_LANGUAGETOOL_URL = "cmd/languagetool";
+  MySettings settings;
+  QNetworkAccessManager* manager = nullptr;
+  QNetworkReply* reply = nullptr;
 };
-
-#endif  // MYSETTINGS_H
+}
+#endif  // LANGUAGETOOLCLIENT_H

@@ -1,4 +1,4 @@
-QT       += core gui sql
+QT       += core gui sql network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -34,7 +34,9 @@ SOURCES += main.cpp \
     ifilewriter.cpp \
     csvfilewriter.cpp \
     latexfilewriter.cpp \
-    pdffilewriter.cpp
+    pdffilewriter.cpp \
+    languagetoolclient.cpp \
+    languagetoolreply.cpp
 
 HEADERS += \
     whitecard.h \
@@ -52,7 +54,9 @@ HEADERS += \
     ifilewriter.h \
     csvfilewriter.h \
     latexfilewriter.h \
-    pdffilewriter.h
+    pdffilewriter.h \
+    languagetoolclient.h \
+    languagetoolreply.h
 
 FORMS += \
     mainwindow.ui \
