@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>733</width>
-    <height>225</height>
+    <height>273</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -69,10 +69,10 @@
       <item row="0" column="1">
        <widget class="QLineEdit" name="pdftexEdit"/>
       </item>
-      <item row="0" column="0">
-       <widget class="QLabel" name="pdftexLabel">
+      <item row="1" column="0">
+       <widget class="QLabel" name="languagetoolLabel">
         <property name="text">
-         <string>pdflatex:</string>
+         <string>Languagetool:</string>
         </property>
        </widget>
       </item>
@@ -81,6 +81,255 @@
         <property name="text">
          <string>...</string>
         </property>
+       </widget>
+      </item>
+      <item row="0" column="0">
+       <widget class="QLabel" name="pdftexLabel">
+        <property name="text">
+         <string>pdflatex:</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLineEdit" name="laguagetoolEdit"/>
+      </item>
+      <item row="1" column="2">
+       <widget class="QComboBox" name="languagetoolLanguage">
+        <item>
+         <property name="text">
+          <string>ast-ES</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>be-BY</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>br-FR</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>ca-ES</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>ca-ES-valencia</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>zh-CN</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>da-DK</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>nl</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>en</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>en-AU</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>en-CA</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>en-GB</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>en-NZ</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>en-US</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>eo</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>fr</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>gl-es</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>de</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>de-AT</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>de-DE</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>de-CH</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>el-GR</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>it</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>ja-JP</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>km-KH</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>fa</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>pl-PL</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>pt</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>pt-AO</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>pt-BR</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>pt-MZ</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>pt-PT</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>ro-RO</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>ru-RU</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>sr</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>sr-BA</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>sr-HR</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>sr-ME</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>sr-RS</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>de-DE-x-simple-language</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>sk-SK</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>sl-SI</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>es</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>sv</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>tl-PH</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>ta-IN</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>uk-UA</string>
+         </property>
+        </item>
        </widget>
       </item>
      </layout>

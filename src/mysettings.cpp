@@ -57,3 +57,11 @@ QString MySettings::getLanguagetoolUrl() {
   return value(KEY_LANGUAGETOOL_URL, "https://languagetool.org/api/v2/check")
       .toString();
 }
+
+void MySettings::setLanguagetoolLanguage(const QString &lang) {
+  setValue(KEY_LANGUAGETOOL_LANGUAGE, lang);
+}
+
+QString MySettings::getLanguagetoolLanguage() {
+  return value(KEY_LANGUAGETOOL_LANGUAGE, "de-DE").toString();
+}

@@ -187,6 +187,9 @@
    <property name="text">
     <string>Check Text</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+L</string>
+   </property>
   </action>
  </widget>
  <resources>

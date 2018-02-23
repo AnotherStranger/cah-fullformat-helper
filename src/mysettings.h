@@ -38,12 +38,17 @@ class MySettings : public QSettings {
   QString getLanguagetoolUrl();
   void setLanguagetoolUrl(const QString& url);
 
+  QString getLanguagetoolLanguage();
+  void setLanguagetoolLanguage(const QString& lang);
+
  private:
   static constexpr const char* KEY_DB_PATH = "data/dbpath";
   static constexpr const char* KEY_DUPLICATE_THRESHOLD =
       "gui/duplicatethreshold";
   static constexpr const char* KEY_LATEX_COMMAND = "cmd/latex";
   static constexpr const char* KEY_LANGUAGETOOL_URL = "cmd/languagetool";
+  static constexpr const char* KEY_LANGUAGETOOL_LANGUAGE =
+      "cmd/languagetoollanguage";
 };
 
 #endif  // MYSETTINGS_H

@@ -36,6 +36,12 @@ void SettingsDialog::setupControls() {
   // LaTeX command
   ui->pdftexEdit->setText(settings.getLatexCommand());
 
+  // Languagetool
+  ui->laguagetoolEdit->setText(settings.getLanguagetoolUrl());
+  int line =
+      ui->languagetoolLanguage->findText(settings.getLanguagetoolLanguage());
+  ui->languagetoolLanguage->setCurrentIndex(line);
+
   // Duplicate Threshold
   ui->thresholdSlider->setValue(settings.getDuplicateThreshold());
   ui->thresholdSpinBox->setValue(settings.getDuplicateThreshold());
@@ -71,6 +77,10 @@ void SettingsDialog::on_buttonBox_accepted() {
 
   // pdflatex command
   settings.setLatexCommand(ui->pdftexEdit->text());
+
+  // Languagetool
+  settings.setLanguagetoolLanguage(ui->languagetoolLanguage->currentText());
+  settings.setLanguagetoolUrl(ui->laguagetoolEdit->text());
 
   // Restart
   int result = QMessageBox::question(

@@ -79,7 +79,7 @@ void CardDataMappingWidget::setupMapping() {
 void CardDataMappingWidget::cardTextChanged() { findDuplicates(); }
 
 void CardDataMappingWidget::checkText() {
-  ui->textEdit->setText(ui->textEdit->toPlainText());
+  ui->textEdit->setPlainText(ui->textEdit->toPlainText());
   languagetoolClient.check(ui->textEdit->toPlainText());
 }
 
@@ -96,13 +96,13 @@ void CardDataMappingWidget::checkTextAnswer(
   QString editText = ui->textEdit->toPlainText();
   for (lanugagetool::match m : matches) {
     qDebug() << m.message;
+    QTextCharFormat fmt;
+    fmt.setBackground(Qt::yellow);
 
-    QString beforeErr = editText.mid(0, m.offset);
-    QString errPart =
-        QString("<b>").append(editText.mid(m.offset, m.length)).append("</b>");
-    QString afterErr = editText.mid(m.offset + m.length);
-
-    ui->textEdit->setHtml(beforeErr.append(errPart).append(afterErr));
+    QTextCursor cursor = ui->textEdit->textCursor();
+    cursor.setPosition(m.offset, QTextCursor::MoveAnchor);
+    cursor.setPosition(m.offset + m.length, QTextCursor::KeepAnchor);
+    cursor.setCharFormat(fmt);
   }
 }
 
