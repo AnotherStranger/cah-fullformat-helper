@@ -163,11 +163,18 @@ CardDataMappingWidget::~CardDataMappingWidget() { delete ui; }
 void CardDataMappingWidget::on_buttonBox_accepted() {
   mapper->submit();
   model->submitAll();
+  this->hide();
 }
 
 void CardDataMappingWidget::on_buttonBox_rejected() {
   mapper->revert();
   model->revertAll();
+  this->hide();
+}
+
+void CardDataMappingWidget::closeEvent(QCloseEvent *bar){
+    on_buttonBox_rejected();
+    bar->accept();
 }
 
 void CardDataMappingWidget::on_duplicateSlider_valueChanged(int value) {

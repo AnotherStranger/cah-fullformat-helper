@@ -26,15 +26,15 @@
       <string>Card editing</string>
      </property>
      <layout class="QFormLayout" name="formLayout_2">
-      <item row="1" column="1">
-       <widget class="QSpinBox" name="answerSpin"/>
-      </item>
       <item row="1" column="0">
        <widget class="QLabel" name="answerLabel">
         <property name="text">
          <string>Number of answers:</string>
         </property>
        </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QSpinBox" name="answerSpin"/>
       </item>
       <item row="2" column="0">
        <widget class="QLabel" name="categoryLabel">
@@ -53,13 +53,6 @@
         </property>
        </widget>
       </item>
-      <item row="4" column="1">
-       <widget class="QDialogButtonBox" name="buttonBox">
-        <property name="standardButtons">
-         <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-        </property>
-       </widget>
-      </item>
       <item row="3" column="1">
        <widget class="QPlainTextEdit" name="textEdit">
         <property name="sizePolicy">
@@ -67,6 +60,9 @@
           <horstretch>0</horstretch>
           <verstretch>1</verstretch>
          </sizepolicy>
+        </property>
+        <property name="tabChangesFocus">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -116,8 +112,23 @@
      </layout>
     </widget>
    </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox">
+     <property name="standardButtons">
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>answerSpin</tabstop>
+  <tabstop>categoryEdit</tabstop>
+  <tabstop>textEdit</tabstop>
+  <tabstop>duplicatesTable</tabstop>
+  <tabstop>duplicateSpin</tabstop>
+  <tabstop>duplicateSlider</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -71,6 +71,7 @@ class CardDataMappingWidget : public QWidget {
   void setupMapping();
   void setupDuplicateView();
   void findDuplicates();
+  void closeEvent(QCloseEvent *bar);
 };
 
 #endif  // CARDDATAMAPPINGWIDGET_H

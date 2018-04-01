@@ -40,23 +40,24 @@ MainWindow::MainWindow(QWidget *parent)
   setupDb();
 
   prepareCardsTableView();
-  this->centralWidget()->layout()->addWidget(mappingWidget);
+ //this->centralWidget()->layout()->addWidget(mappingWidget);
 
   cardsTableView->show();
   ui->statusbar->showMessage("ready");
 }
 
 void MainWindow::setupDb() {
-  QString path = settings.getDbPath();
+  QString fullPath = settings.getDbPath();
+  QString path = fullPath.left(fullPath.lastIndexOf('/'));
 
-  QFile dbFile(path);
+  QFile dbFile(fullPath);
   if (!dbFile.exists()) {
     QDir dbDir(path);
     if (!dbDir.exists()) {
       dbDir.mkpath(".");
     }
   }
-  database = new cah::DbManager(path, this);
+  database = new cah::DbManager(fullPath, this);
 }
 
 void MainWindow::prepareCardsTableView() {
@@ -90,8 +91,8 @@ void MainWindow::prepareCardsTableView() {
   cardsTableView->horizontalHeader()->setSectionResizeMode(
       3, QHeaderView::Stretch);
 
-  mappingWidget = new CardDataMappingWidget(cardsTableView, tableViewModel,
-                                            this->centralWidget());
+  mappingWidget = new CardDataMappingWidget(cardsTableView, tableViewModel);
+                                          //  this->centralWidget());
 }
 
 void MainWindow::ensureConsistentState() {
@@ -238,7 +239,7 @@ void MainWindow::on_actionAdd_Card_triggered() {
 
     tableViewModel->insertRecord(0, add);
     cardsTableView->selectRow(0);
-    mappingWidget->startEditing();
+    editCard();
   }
 }
 
@@ -268,7 +269,13 @@ void MainWindow::on_actionRemove_Card_s_triggered() {
 
 void MainWindow::on_tableView_doubleClicked(const QModelIndex &index) {
   Q_UNUSED(index)
-  mappingWidget->startEditing();
+  editCard();
+}
+
+void MainWindow::editCard(){
+    mappingWidget->setWindowModality(Qt::ApplicationModal);
+    mappingWidget->show();
+    mappingWidget->startEditing();
 }
 
 void MainWindow::on_actionOptions_triggered() {

@@ -80,6 +80,7 @@ class MainWindow : public QMainWindow {
   void prepareCardsTableView();
   void ensureConsistentState();
   void setupDb();
+  void editCard();
 };
 
 #endif  // MAINWINDOW_H
