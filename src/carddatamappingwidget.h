@@ -26,6 +26,7 @@
 #include <QSharedPointer>
 #include <QSqlTableModel>
 #include <QTableView>
+#include <QMainWindow>
 #include <QWidget>
 #include "cardsdeck.h"
 #include "languagetoolclient.h"
@@ -35,7 +36,7 @@ namespace Ui {
 class CardDataMappingWidget;
 }
 
-class CardDataMappingWidget : public QWidget {
+class CardDataMappingWidget : public QMainWindow {
   Q_OBJECT
 
  public:
@@ -57,7 +58,9 @@ class CardDataMappingWidget : public QWidget {
 
   void checkTextAnswer(QSharedPointer<lanugagetool::LanguagetoolReply> reply);
 
- private:
+  void on_actionCheck_Text_triggered();
+
+private:
   Ui::CardDataMappingWidget *ui;
   QSqlTableModel *model;
   QDataWidgetMapper *mapper;

@@ -60,8 +60,6 @@ class MainWindow : public QMainWindow {
 
   void on_actionAbout_triggered();
 
-  void on_actionCheck_Text_triggered();
-
  public slots:
   void exportFinished(cah::IoResult res, QString filename);
 

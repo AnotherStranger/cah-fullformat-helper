@@ -25,7 +25,7 @@
 CardDataMappingWidget::CardDataMappingWidget(QTableView *view,
                                              QSqlTableModel *model,
                                              QWidget *parent)
-    : QWidget(parent),
+    : QMainWindow(parent),
       ui(new Ui::CardDataMappingWidget),
       model(model),
       view(view) {
@@ -163,13 +163,13 @@ CardDataMappingWidget::~CardDataMappingWidget() { delete ui; }
 void CardDataMappingWidget::on_buttonBox_accepted() {
   mapper->submit();
   model->submitAll();
-  this->hide();
+  this->close();
 }
 
 void CardDataMappingWidget::on_buttonBox_rejected() {
   mapper->revert();
   model->revertAll();
-  this->hide();
+  this->close();
 }
 
 void CardDataMappingWidget::closeEvent(QCloseEvent *bar){
@@ -180,4 +180,9 @@ void CardDataMappingWidget::closeEvent(QCloseEvent *bar){
 void CardDataMappingWidget::on_duplicateSlider_valueChanged(int value) {
   duplicateThreshold = value;
   findDuplicates();
+}
+
+void CardDataMappingWidget::on_actionCheck_Text_triggered()
+{
+    checkText();
 }
