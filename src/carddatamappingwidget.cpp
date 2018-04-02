@@ -18,16 +18,14 @@
  */
 
 #include "carddatamappingwidget.h"
+#include "ui_carddatamappingwidget.h"
 #include <QListWidgetItem>
 #include <QMessageBox>
-#include "ui_carddatamappingwidget.h"
 
 CardDataMappingWidget::CardDataMappingWidget(QTableView *view,
                                              QSqlTableModel *model,
                                              QWidget *parent)
-    : QMainWindow(parent),
-      ui(new Ui::CardDataMappingWidget),
-      model(model),
+    : QMainWindow(parent), ui(new Ui::CardDataMappingWidget), model(model),
       view(view) {
   ui->setupUi(this);
 
@@ -83,21 +81,19 @@ void CardDataMappingWidget::checkText() {
   languagetoolClient.check(ui->textEdit->toPlainText());
 }
 
-void CardDataMappingWidget::checkTextAnswer(
-    QSharedPointer<lanugagetool::LanguagetoolReply> reply) {
-  QList<lanugagetool::match> matches = reply->getMatches();
-
+void CardDataMappingWidget::markMatches() {
   auto sortFun = [](lanugagetool::match m1, lanugagetool::match m2) -> bool {
     return m1.offset > m2.offset;
   };
 
-  std::sort(matches.begin(), matches.end(), sortFun);
+  std::sort(currentMatches.begin(), currentMatches.end(), sortFun);
 
   QString editText = ui->textEdit->toPlainText();
-  for (lanugagetool::match m : matches) {
+  for (lanugagetool::match m : currentMatches) {
     qDebug() << m.message;
     QTextCharFormat fmt;
-    fmt.setBackground(Qt::yellow);
+    fmt.setUnderlineColor(Qt::red);
+    fmt.setUnderlineStyle(QTextCharFormat::SpellCheckUnderline);
 
     QTextCursor cursor = ui->textEdit->textCursor();
     cursor.setPosition(m.offset, QTextCursor::MoveAnchor);
@@ -106,9 +102,16 @@ void CardDataMappingWidget::checkTextAnswer(
   }
 }
 
+void CardDataMappingWidget::checkTextAnswer(
+    QSharedPointer<lanugagetool::LanguagetoolReply> reply) {
+  currentMatches = reply->getMatches();
+
+  markMatches();
+}
+
 void CardDataMappingWidget::findDuplicates() {
   struct duplicate {
-   public:
+  public:
     duplicate(QString t, int l) : text(t), levensthein_distance(l) {}
 
     QString text;
@@ -172,9 +175,9 @@ void CardDataMappingWidget::on_buttonBox_rejected() {
   this->close();
 }
 
-void CardDataMappingWidget::closeEvent(QCloseEvent *bar){
-    on_buttonBox_rejected();
-    bar->accept();
+void CardDataMappingWidget::closeEvent(QCloseEvent *bar) {
+  on_buttonBox_rejected();
+  bar->accept();
 }
 
 void CardDataMappingWidget::on_duplicateSlider_valueChanged(int value) {
@@ -182,7 +185,35 @@ void CardDataMappingWidget::on_duplicateSlider_valueChanged(int value) {
   findDuplicates();
 }
 
-void CardDataMappingWidget::on_actionCheck_Text_triggered()
-{
-    checkText();
+void CardDataMappingWidget::on_actionCheck_Text_triggered() { checkText(); }
+
+void CardDataMappingWidget::on_textEdit_cursorPositionChanged() {
+  QTextCursor cursor = ui->textEdit->textCursor();
+
+  bool errSelected = false;
+  for (auto match : currentMatches) {
+    if (cursor.position() >= match.offset &&
+        cursor.position() <= match.offset + match.length) {
+      ui->statusBar->showMessage("Possible Error: " + match.message);
+      errSelected = true;
+    }
+  }
+
+  if (!errSelected) {
+    ui->statusBar->showMessage("");
+  }
+}
+
+void CardDataMappingWidget::on_textEdit_textChanged() {
+  QString currentText = ui->textEdit->toPlainText();
+  bool resetFormatting = currentText != oldText && currentText.length() != 0;
+  oldText = currentText;
+  if (resetFormatting) {
+    QTextCharFormat fmt;
+    QTextCursor cursor = ui->textEdit->textCursor();
+    cursor.setPosition(0, QTextCursor::MoveAnchor);
+    cursor.setPosition(currentText.length(), QTextCursor::KeepAnchor);
+    cursor.setCharFormat(fmt);
+    currentMatches.clear();
+  }
 }

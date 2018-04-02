@@ -20,17 +20,17 @@
 #ifndef CARDDATAMAPPINGWIDGET_H
 #define CARDDATAMAPPINGWIDGET_H
 
-#include <card.h>
-#include <QDataWidgetMapper>
-#include <QDialog>
-#include <QSharedPointer>
-#include <QSqlTableModel>
-#include <QTableView>
-#include <QMainWindow>
-#include <QWidget>
 #include "cardsdeck.h"
 #include "languagetoolclient.h"
 #include "mysettings.h"
+#include <QDataWidgetMapper>
+#include <QDialog>
+#include <QMainWindow>
+#include <QSharedPointer>
+#include <QSqlTableModel>
+#include <QTableView>
+#include <QWidget>
+#include <card.h>
 
 namespace Ui {
 class CardDataMappingWidget;
@@ -39,7 +39,7 @@ class CardDataMappingWidget;
 class CardDataMappingWidget : public QMainWindow {
   Q_OBJECT
 
- public:
+public:
   explicit CardDataMappingWidget(QTableView *view, QSqlTableModel *model,
                                  QWidget *parent = 0);
   ~CardDataMappingWidget();
@@ -47,7 +47,7 @@ class CardDataMappingWidget : public QMainWindow {
   void startEditing();
   void checkText();
 
- private slots:
+private slots:
   void cardTextChanged();
 
   void on_buttonBox_accepted();
@@ -60,12 +60,18 @@ class CardDataMappingWidget : public QMainWindow {
 
   void on_actionCheck_Text_triggered();
 
+  void on_textEdit_cursorPositionChanged();
+
+  void on_textEdit_textChanged();
+
 private:
   Ui::CardDataMappingWidget *ui;
   QSqlTableModel *model;
   QDataWidgetMapper *mapper;
   QTableView *view;
   lanugagetool::LanguagetoolClient languagetoolClient;
+  QList<lanugagetool::match> currentMatches;
+  QString oldText;
 
   MySettings settings;
 
@@ -75,6 +81,7 @@ private:
   void setupDuplicateView();
   void findDuplicates();
   void closeEvent(QCloseEvent *bar);
+  void markMatches();
 };
 
-#endif  // CARDDATAMAPPINGWIDGET_H
+#endif // CARDDATAMAPPINGWIDGET_H
